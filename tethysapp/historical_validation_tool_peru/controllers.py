@@ -89,8 +89,6 @@ def get_popup_response(request):
 		'''Get Observed Data'''
 		url = 'https://www.hydroshare.org/resource/b7efdb43bf59470fb5baa4426931d8fe/data/contents/{0}_{1}.csv'.format(idEstacion, nomEstacion)
 
-		print(url)
-
 		s = requests.get(url, verify=False).content
 		df = pd.read_csv(io.StringIO(s.decode('utf-8')), index_col=0)
 		df.index = pd.to_datetime(df.index)
