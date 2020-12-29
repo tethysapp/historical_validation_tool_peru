@@ -16,11 +16,13 @@ import traceback
 import numpy as np
 import math
 from csv import writer as csv_writer
+import datetime as dt
 
 ## global values ##
 watershed = 'none'
 subbasin = 'none'
 comid = 'none'
+idEstacion = 'none'
 codEstacion = 'none'
 nomEstacion = 'none'
 s = None
@@ -57,6 +59,7 @@ def get_popup_response(request):
 	global watershed
 	global subbasin
 	global comid
+	global idEstacion
 	global codEstacion
 	global nomEstacion
 	global s
@@ -68,6 +71,21 @@ def get_popup_response(request):
 	global forecast_record
 	global fixed_records
 
+	watershed = 'none'
+	subbasin = 'none'
+	comid = 'none'
+	idEstacion = 'none'
+	codEstacion = 'none'
+	nomEstacion = 'none'
+	s = None
+	simulated_df = pd.DataFrame({'A': []})
+	observed_df = pd.DataFrame({'A': []})
+	corrected_df = pd.DataFrame({'A': []})
+	forecast_df = pd.DataFrame({'A': []})
+	fixed_stats = None
+	forecast_record = None
+	fixed_records = None
+
 	try:
 		#get station attributes
 		watershed = get_data['watershed']
@@ -77,6 +95,12 @@ def get_popup_response(request):
 		codEstacion = get_data['stationcode']
 		nomEstacion = get_data['stationname']
 		nomEstacion = nomEstacion.replace(' ', '_')
+		nomEstacion = nomEstacion.replace('+', '')
+		nomEstacion = nomEstacion.replace('(', '')
+		nomEstacion = nomEstacion.replace(')', '')
+
+		print(codEstacion)
+		print(idEstacion)
 
 		# get Simulated Streamflow
 		simulated_df = geoglows.streamflow.historic_simulation(comid, forcing='era_5', return_format='csv')
@@ -281,6 +305,7 @@ def get_scatterPlot(request):
 	Get historic simulations from ERA Interim
 	"""
 	get_data = request.GET
+	global idEstacion
 	global codEstacion
 	global nomEstacion
 	global simulated_df
@@ -372,6 +397,7 @@ def get_scatterPlotLogScale(request):
 	Get historic simulations from ERA Interim
 	"""
 	get_data = request.GET
+	global idEstacion
 	global codEstacion
 	global nomEstacion
 	global simulated_df
@@ -797,6 +823,7 @@ def get_time_series(request):
 def get_time_series_bc(request):
 	get_data = request.GET
 	global comid
+	global idEstacion
 	global codEstacion
 	global nomEstacion
 	global corrected_df
@@ -934,6 +961,7 @@ def get_observed_discharge_csv(request):
 
 	get_data = request.GET
 	global observed_df
+	global idEstacion
 	global codEstacion
 	global nomEstacion
 
@@ -1009,8 +1037,7 @@ def get_simulated_bc_discharge_csv(request):
 	try:
 
 		response = HttpResponse(content_type='text/csv')
-		response['Content-Disposition'] = 'attachment; filename=corrected_simulated_discharge_{0}.csv'.format(
-			codEstacion)
+		response['Content-Disposition'] = 'attachment; filename=corrected_simulated_discharge_{0}.csv'.format(idEstacion)
 
 		corrected_df.to_csv(encoding='utf-8', header=True, path_or_buf=response)
 

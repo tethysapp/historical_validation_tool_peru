@@ -1,5 +1,5 @@
 // Getting the csrf token
-function get_requestData(watershed, subbasin, streamcomid, stationid, stationcode, stationname){
+function get_requestData (watershed, subbasin, streamcomid, stationid, stationcode, stationname){
   getdata = {
       'watershed': watershed,
       'subbasin': subbasin,
@@ -21,7 +21,7 @@ function get_requestData(watershed, subbasin, streamcomid, stationid, stationcod
           }, 5000);
       },
       success: function (data) {
-        console.log(data)
+        console.log(getdata)
         get_hydrographs (watershed, subbasin, streamcomid, stationid, stationcode, stationname);
         get_dailyAverages (watershed, subbasin, streamcomid, stationid, stationcode, stationname);
         get_monthlyAverages (watershed, subbasin, streamcomid, stationid, stationcode, stationname);
