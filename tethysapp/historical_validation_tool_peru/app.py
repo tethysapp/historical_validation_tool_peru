@@ -13,7 +13,7 @@ class HistoricalValidationToolPeru(TethysAppBase):
     root_url = 'historical-validation-tool-peru'
     color = '#2980b9'
     description = 'This app evaluates the accuracy for the historical streamflow values obtained from Streamflow Prediction Tool in Peru.'
-    tags = '"Hydrology"'
+    tags = '"Hydrology", "Time Series", "Bias Correction", "Hydrostats", "GEOGloWS", "Historical Validation Tool"'
     enable_feedback = False
     feedback_emails = []
 

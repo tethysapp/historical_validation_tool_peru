@@ -16,10 +16,10 @@ resource_files += find_resource_files('tethysapp/' + app_package + '/workspaces'
 
 setup(
     name=release_package,
-    version='0.0.1',
+    version='1.0',
     description='This app evaluates the accuracy for the historical streamflow values obtained from Streamflow Prediction Tool in Peru.',
     long_description='',
-    keywords='',
+    keywords='"Hydrology", "Time Series", "Bias Correction", "Hydrostats", "GEOGloWS", "Historical Validation Tool"',
     author='Jorge Luis Sanchez-Lozano',
     author_email='jorgessanchez7@gmail.com',
     url='',

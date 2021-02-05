@@ -105,9 +105,6 @@ def get_popup_response(request):
 		nomEstacion = nomEstacion.replace('(', '')
 		nomEstacion = nomEstacion.replace(')', '')
 
-		print(codEstacion)
-		print(idEstacion)
-
 		# get Simulated Streamflow
 		simulated_df = geoglows.streamflow.historic_simulation(comid, forcing='era_5', return_format='csv')
 		# Removing Negative Values
