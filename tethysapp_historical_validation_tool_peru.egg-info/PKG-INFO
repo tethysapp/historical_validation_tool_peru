@@ -1,0 +1,10 @@
+Metadata-Version: 1.0
+Name: tethysapp-historical-validation-tool-peru
+Version: 0.0.1
+Summary: This app evaluates the accuracy for the historical streamflow values obtained from Streamflow Prediction Tool in Peru.
+Home-page: UNKNOWN
+Author: Jorge Luis Sanchez-Lozano
+Author-email: jorgessanchez7@gmail.com
+License: UNKNOWN
+Description: UNKNOWN
+Platform: UNKNOWN
