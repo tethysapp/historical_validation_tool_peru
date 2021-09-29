@@ -174,14 +174,6 @@ def get_popup_response(request):
         nomEstacion = nomEstacion.replace('(', '')
         nomEstacion = nomEstacion.replace(')', '')
 
-        # get Simulated Streamflow
-        simulated_df = geoglows.streamflow.historic_simulation(comid, forcing='era_5', return_format='csv')
-        # Removing Negative Values
-        simulated_df[simulated_df < 0] = 0
-        simulated_df.index = simulated_df.index.to_series().dt.strftime("%Y-%m-%d")
-        simulated_df.index = pd.to_datetime(simulated_df.index)
-        simulated_df = pd.DataFrame(data=simulated_df.iloc[:, 0].values, index=simulated_df.index, columns=['Simulated Streamflow'])
-
         '''Get Observed Data'''
         auth = HydroShareAuthBasic(username=app.get_custom_setting('username'), password=app.get_custom_setting('password'))
         hs = HydroShare(auth=auth)
@@ -204,30 +196,6 @@ def get_popup_response(request):
         observed_df = pd.DataFrame(data=dataDischarge, index=datesDischarge, columns=['Observed Streamflow'])
 
         hs.setAccessRules(resource_id, public=False)
-
-        '''Correct the Bias in Sumulation'''
-
-        corrected_df = geoglows.bias.correct_historical(simulated_df, observed_df)
-
-        '''Get Forecasts'''
-        forecast_df = geoglows.streamflow.forecast_stats(comid, return_format='csv')
-        # Removing Negative Values
-        forecast_df[forecast_df < 0] = 0
-
-        '''Correct Bias Forecasts'''
-        fixed_stats = geoglows.bias.correct_forecast(forecast_df, simulated_df, observed_df)
-
-        '''Get Forecasts Records'''
-        try:
-            forecast_record = geoglows.streamflow.forecast_records(comid)
-            forecast_record[forecast_record < 0] = 0
-            forecast_record = forecast_record.loc[forecast_record.index >= pd.to_datetime(forecast_df.index[0] - dt.timedelta(days=8))]
-
-            '''Correct Bias Forecasts Records'''
-            fixed_records = geoglows.bias.correct_forecast(forecast_record, simulated_df, observed_df, use_month=-1)
-            fixed_records = fixed_records.loc[fixed_records.index >= pd.to_datetime(forecast_df.index[0] - dt.timedelta(days=8))]
-        except:
-            print('There is no forecast record')
 
         print("finished get_popup_response")
 
@@ -252,10 +220,23 @@ def get_hydrographs(request):
     global simulated_df
     global observed_df
     global corrected_df
+    global comid
 
     start_time = time.time()
 
     try:
+
+        '''Get Simulated Data'''
+        simulated_df = geoglows.streamflow.historic_simulation(comid, forcing='era_5', return_format='csv')
+        # Removing Negative Values
+        simulated_df[simulated_df < 0] = 0
+        simulated_df.index = simulated_df.index.to_series().dt.strftime("%Y-%m-%d")
+        simulated_df.index = pd.to_datetime(simulated_df.index)
+        simulated_df = pd.DataFrame(data=simulated_df.iloc[:, 0].values, index=simulated_df.index, columns=['Simulated Streamflow'])
+
+        '''Correct the Bias in Sumulation'''
+
+        corrected_df = geoglows.bias.correct_historical(simulated_df, observed_df)
 
         '''Plotting Data'''
         observed_Q = go.Scatter(x=observed_df.index, y=observed_df.iloc[:, 0].values, name='Observed', )
@@ -818,6 +799,7 @@ def make_table_ajax(request):
         traceback.print_exc()
         return JsonResponse({'error': 'No data found for the selected station.'})
 
+
 def get_units_title(unit_type):
     """
     Get the title for units
@@ -841,6 +823,21 @@ def get_time_series(request):
 
     try:
 
+        startdate = get_data['startdate']
+
+        '''Getting Forecast Stats'''
+        if startdate != '':
+            res = requests.get('https://geoglows.ecmwf.int/api/ForecastStats/?reach_id=' + comid + '&date=' + startdate + '&return_format=csv', verify=False).content
+        else:
+            res = requests.get('https://geoglows.ecmwf.int/api/ForecastStats/?reach_id=' + comid + '&return_format=csv', verify=False).content
+
+        '''Get Forecasts'''
+        forecast_df = pd.read_csv(io.StringIO(res.decode('utf-8')), index_col=0)
+        forecast_df.index = pd.to_datetime(forecast_df.index)
+        forecast_df[forecast_df < 0] = 0
+        forecast_df.index = forecast_df.index.to_series().dt.strftime("%Y-%m-%d %H:%M:%S")
+        forecast_df.index = pd.to_datetime(forecast_df.index)
+
         hydroviewer_figure = geoglows.plots.forecast_stats(stats=forecast_df, titles={'Station': nomEstacion + '-' + str(codEstacion), 'Reach ID': comid})
 
         x_vals = (forecast_df.index[0], forecast_df.index[len(forecast_df.index) - 1], forecast_df.index[len(forecast_df.index) - 1], forecast_df.index[0])
@@ -848,27 +845,27 @@ def get_time_series(request):
 
         '''Getting forecast record'''
 
-        try:
+        forecast_record = geoglows.streamflow.forecast_records(comid)
+        forecast_record[forecast_record < 0] = 0
+        forecast_record.index = forecast_record.index.to_series().dt.strftime("%Y-%m-%d %H:%M:%S")
+        forecast_record.index = pd.to_datetime(forecast_record.index)
 
-            if len(forecast_record.index) > 0:
-                hydroviewer_figure.add_trace(go.Scatter(
-                    name='1st days forecasts',
-                    x=forecast_record.index,
-                    y=forecast_record.iloc[:, 0].values,
-                    line=dict(
-                        color='#FFA15A',
-                    )
-                ))
+        record_plot = forecast_record.copy()
+        record_plot = record_plot.loc[record_plot.index >= pd.to_datetime(forecast_df.index[0] - dt.timedelta(days=8))]
+        record_plot = record_plot.loc[record_plot.index <= pd.to_datetime(forecast_df.index[0] + dt.timedelta(days=2))]
 
-            if 'x_vals' in locals():
-                x_vals = (forecast_record.index[0], forecast_df.index[len(forecast_df.index) - 1], forecast_df.index[len(forecast_df.index) - 1], forecast_record.index[0])
-            else:
-                x_vals = (forecast_record.index[0], forecast_df.index[len(forecast_df.index) - 1], forecast_df.index[len(forecast_df.index) - 1], forecast_record.index[0])
-                max_visible = max(forecast_record.max(), max_visible)
+        if len(record_plot.index) > 0:
+            hydroviewer_figure.add_trace(go.Scatter(
+                name='1st days forecasts',
+                x=record_plot.index,
+                y=record_plot.iloc[:, 0].values,
+                line=dict(
+                    color='#FFA15A',
+                )
+            ))
 
-        except:
-            print('Not forecast record for the selected station')
-
+            x_vals = (record_plot.index[0], forecast_df.index[len(forecast_df.index) - 1], forecast_df.index[len(forecast_df.index) - 1], record_plot.index[0])
+            max_visible = max(record_plot.max().values[0], max_visible)
 
         '''Getting Return Periods'''
 
@@ -956,6 +953,89 @@ def get_time_series_bc(request):
 
     try:
 
+        startdate = get_data['startdate']
+
+        '''Getting Forecast Stats'''
+        if startdate != '':
+            res = requests.get('https://geoglows.ecmwf.int/api/ForecastEnsembles/?reach_id=' + comid + '&date=' + startdate + '&return_format=csv', verify=False).content
+        else:
+            res = requests.get('https://geoglows.ecmwf.int/api/ForecastEnsembles/?reach_id=' + comid + '&return_format=csv', verify=False).content
+
+        '''Get Forecasts'''
+        forecast_ens = pd.read_csv(io.StringIO(res.decode('utf-8')), index_col=0)
+        forecast_ens.index = pd.to_datetime(forecast_ens.index)
+        forecast_ens[forecast_ens < 0] = 0
+        forecast_ens.index = forecast_ens.index.to_series().dt.strftime("%Y-%m-%d %H:%M:%S")
+        forecast_ens.index = pd.to_datetime(forecast_ens.index)
+
+        '''Get Forecasts Records'''
+        forecast_record = geoglows.streamflow.forecast_records(comid)
+        forecast_record[forecast_record < 0] = 0
+        forecast_record.index = forecast_record.index.to_series().dt.strftime("%Y-%m-%d %H:%M:%S")
+        forecast_record.index = pd.to_datetime(forecast_record.index)
+
+        monthly_simulated = simulated_df[simulated_df.index.month == (forecast_ens.index[0]).month].dropna()
+        monthly_observed = observed_df[observed_df.index.month == (forecast_ens.index[0]).month].dropna()
+
+        min_simulated = np.min(monthly_simulated.iloc[:, 0].to_list())
+        max_simulated = np.max(monthly_simulated.iloc[:, 0].to_list())
+
+        min_factor_df = forecast_ens.copy()
+        max_factor_df = forecast_ens.copy()
+        forecast_ens_df = forecast_ens.copy()
+
+        for column in forecast_ens.columns:
+            tmp = forecast_ens[column].dropna().to_frame()
+            min_factor = tmp.copy()
+            max_factor = tmp.copy()
+            min_factor.loc[min_factor[column] >= min_simulated, column] = 1
+            min_index_value = min_factor[min_factor[column] != 1].index.tolist()
+            for element in min_index_value:
+                min_factor[column].loc[min_factor.index == element] = tmp[column].loc[
+                                                                          tmp.index == element] / min_simulated
+            max_factor.loc[max_factor[column] <= max_simulated, column] = 1
+            max_index_value = max_factor[max_factor[column] != 1].index.tolist()
+            for element in max_index_value:
+                max_factor[column].loc[max_factor.index == element] = tmp[column].loc[
+                                                                          tmp.index == element] / max_simulated
+            tmp.loc[tmp[column] <= min_simulated, column] = min_simulated
+            tmp.loc[tmp[column] >= max_simulated, column] = max_simulated
+            forecast_ens_df.update(pd.DataFrame(tmp[column].values, index=tmp.index, columns=[column]))
+            min_factor_df.update(pd.DataFrame(min_factor[column].values, index=min_factor.index, columns=[column]))
+            max_factor_df.update(pd.DataFrame(max_factor[column].values, index=max_factor.index, columns=[column]))
+
+        '''Correct Bias Forecasts'''
+        corrected_ensembles = geoglows.bias.correct_forecast(forecast_ens, simulated_df, observed_df)
+
+        corrected_ensembles = corrected_ensembles.multiply(min_factor_df, axis=0)
+        corrected_ensembles = corrected_ensembles.multiply(max_factor_df, axis=0)
+
+        ensemble = corrected_ensembles.copy()
+        high_res_df = ensemble['ensemble_52_m^3/s'].to_frame()
+        ensemble.drop(columns=['ensemble_52_m^3/s'], inplace=True)
+        ensemble.dropna(inplace=True)
+        high_res_df.dropna(inplace=True)
+
+        max_df = ensemble.quantile(1.0, axis=1).to_frame()
+        max_df.rename(columns={1.0: 'flow_max_m^3/s'}, inplace=True)
+
+        p75_df = ensemble.quantile(0.75, axis=1).to_frame()
+        p75_df.rename(columns={0.75: 'flow_75%_m^3/s'}, inplace=True)
+
+        p25_df = ensemble.quantile(0.25, axis=1).to_frame()
+        p25_df.rename(columns={0.25: 'flow_25%_m^3/s'}, inplace=True)
+
+        min_df = ensemble.quantile(0, axis=1).to_frame()
+        min_df.rename(columns={0.0: 'flow_min_m^3/s'}, inplace=True)
+
+        mean_df = ensemble.mean(axis=1).to_frame()
+        mean_df.rename(columns={0: 'flow_avg_m^3/s'}, inplace=True)
+
+        high_res_df.rename(columns={'ensemble_52_m^3/s': 'high_res_m^3/s'}, inplace=True)
+
+        fixed_stats = pd.concat([max_df, p75_df, mean_df, p25_df, min_df, high_res_df], axis=1)
+
+
         hydroviewer_figure = geoglows.plots.forecast_stats(stats=fixed_stats, titles={'Station': nomEstacion + '-' + str(codEstacion), 'Reach ID': comid, 'bias_corrected': True})
 
         x_vals = (fixed_stats.index[0], fixed_stats.index[len(fixed_stats.index) - 1], fixed_stats.index[len(fixed_stats.index) - 1], fixed_stats.index[0])
@@ -963,29 +1043,25 @@ def get_time_series_bc(request):
 
         '''Getting forecast record'''
 
-        try:
+        fixed_records = forecast_record.copy()
+        fixed_records = fixed_records.loc[fixed_records.index >= pd.to_datetime(forecast_df.index[0] - dt.timedelta(days=8))]
+        fixed_records = fixed_records.loc[fixed_records.index <= pd.to_datetime(forecast_df.index[0] + dt.timedelta(days=2))]
 
-            if len(fixed_records.index) > 0:
-                hydroviewer_figure.add_trace(go.Scatter(
+        '''Correct Bias Forecasts Records'''
+        record_plot = geoglows.bias.correct_forecast(fixed_records, simulated_df, observed_df, use_month=-1)
 
+        if len(record_plot.index) > 0:
+            hydroviewer_figure.add_trace(go.Scatter(
+                name='1st days forecasts',
+                x=record_plot.index,
+                y=record_plot.iloc[:, 0].values,
+                line=dict(
+                    color='#FFA15A',
+                )
+            ))
 
-                                      name='1st days forecasts',
-                    x=fixed_records.index,
-                    y=fixed_records.iloc[:, 0].values,
-                    line=dict(
-                        color='#FFA15A',
-                    )
-                ))
-
-            if 'x_vals' in locals():
-                x_vals = (fixed_records.index[0], fixed_stats.index[len(fixed_stats.index) - 1], fixed_stats.index[len(fixed_stats.index) - 1], fixed_records.index[0])
-            else:
-                x_vals = (fixed_records.index[0], fixed_stats.index[len(fixed_stats.index) - 1], fixed_stats.index[len(fixed_stats.index) - 1], fixed_records.index[0])
-
-            max_visible = max(fixed_records.max(), max_visible)
-
-        except:
-            print('There is no forecast record')
+        x_vals = (record_plot.index[0], fixed_stats.index[len(fixed_stats.index) - 1], fixed_stats.index[len(fixed_stats.index) - 1], record_plot.index[0])
+        max_visible = max(record_plot.max().values[0], max_visible)
 
         '''Getting Corrected Return Periods'''
         max_annual_flow = corrected_df.groupby(corrected_df.index.strftime("%Y")).max()
@@ -1219,9 +1295,11 @@ def get_forecast_data_csv(request):
 
     try:
 
+        startdate = get_data['startdate']
+
         # Writing CSV
         response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename=streamflow_forecast_{0}_{1}_{2}.csv'.format(watershed, subbasin, comid)
+        response['Content-Disposition'] = 'attachment; filename=streamflow_forecast_{0}_{1}_{2}_{3}.csv'.format(watershed, subbasin, comid, startdate)
 
         forecast_df.to_csv(encoding='utf-8', header=True, path_or_buf=response)
 
@@ -1243,10 +1321,12 @@ def get_forecast_bc_data_csv(request):
     global forecast_df
     global fixed_stats
 
+    startdate = get_data['startdate']
+
     try:
 
         response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename=corrected_streamflow_forecast_{0}_{1}_{2}.csv'.format(watershed, subbasin, comid)
+        response['Content-Disposition'] = 'attachment; filename=corrected_streamflow_forecast_{0}_{1}_{2}_{3}.csv'.format(watershed, subbasin, comid, startdate)
 
         fixed_stats.to_csv(encoding='utf-8', header=True, path_or_buf=response)
 

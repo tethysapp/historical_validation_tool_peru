@@ -1,5 +1,5 @@
 // Getting the csrf token
-function get_requestData (watershed, subbasin, streamcomid, stationid, stationcode, stationname){
+function get_requestData (watershed, subbasin, streamcomid, stationid, stationcode, stationname, startdate){
   getdata = {
       'watershed': watershed,
       'subbasin': subbasin,
@@ -21,17 +21,9 @@ function get_requestData (watershed, subbasin, streamcomid, stationid, stationco
           }, 5000);
       },
       success: function (data) {
-        console.log(getdata)
-        get_hydrographs (watershed, subbasin, streamcomid, stationid, stationcode, stationname);
-        get_dailyAverages (watershed, subbasin, streamcomid, stationid, stationcode, stationname);
-        get_monthlyAverages (watershed, subbasin, streamcomid, stationid, stationcode, stationname);
-        get_scatterPlot (watershed, subbasin, streamcomid, stationid, stationcode, stationname);
-        get_scatterPlotLogScale (watershed, subbasin, streamcomid, stationid, stationcode, stationname);
-        get_volumeAnalysis (watershed, subbasin, streamcomid, stationid, stationcode, stationname);
-        createVolumeTable(watershed, subbasin, streamcomid, stationid, stationcode, stationname);
-        makeDefaultTable(watershed, subbasin, streamcomid, stationid, stationcode, stationname);
-        get_time_series(watershed, subbasin, streamcomid, stationid, stationcode, stationname);
-        get_time_series_bc(watershed, subbasin, streamcomid, stationid, stationcode, stationname);
+
+        console.log(startdate)
+        get_hydrographs (watershed, subbasin, streamcomid, stationid, stationcode, stationname, startdate);
       }
   })
 }
@@ -153,7 +145,7 @@ let capabilities = $.ajax(ajax_url, {
 	}
 });
 
-function get_hydrographs (watershed, subbasin, streamcomid, stationid, stationcode, stationname) {
+function get_hydrographs (watershed, subbasin, streamcomid, stationid, stationcode, stationname, startdate) {
 	$('#hydrographs-loading').removeClass('hidden');
 	m_downloaded_historical_streamflow = true;
     $.ajax({
@@ -239,6 +231,18 @@ function get_hydrographs (watershed, subbasin, streamcomid, stationid, stationco
                 });
 
                 $('#download_simulated_bc_discharge').removeClass('hidden');
+
+                console.log(startdate)
+
+                get_dailyAverages (watershed, subbasin, streamcomid, stationid, stationcode, stationname);
+				get_monthlyAverages (watershed, subbasin, streamcomid, stationid, stationcode, stationname);
+				get_scatterPlot (watershed, subbasin, streamcomid, stationid, stationcode, stationname);
+				get_scatterPlotLogScale (watershed, subbasin, streamcomid, stationid, stationcode, stationname);
+				get_volumeAnalysis (watershed, subbasin, streamcomid, stationid, stationcode, stationname);
+				createVolumeTable(watershed, subbasin, streamcomid, stationid, stationcode, stationname);
+				makeDefaultTable(watershed, subbasin, streamcomid, stationid, stationcode, stationname);
+				get_time_series(watershed, subbasin, streamcomid, stationid, stationcode, stationname, startdate);
+
 
            		 } else if (data.error) {
            		 	$('#info').html('<p class="alert alert-danger" style="text-align: center"><strong>An unknown error occurred while retrieving the Data</strong></p>');
@@ -635,7 +639,8 @@ function map_events() {
                         			+ streamcomid+ '</h5><h5>Basin: '+ basin + '</h5><h5>Stream: '
                         			+ stream + '</h5><h5>Water Management Authority: '
                         			+ manager + '</h5><h5>Local Water Management: ' + local + '</h5>');
-                        get_requestData(watershed, subbasin, streamcomid, stationid, stationcode, stationname);
+                        console.log(startdate)
+                        get_requestData(watershed, subbasin, streamcomid, stationid, stationcode, stationname, startdate);
                     }
                 });
             }
@@ -719,8 +724,8 @@ $(function() {
         startdate = startdate.replace("-","");
 
         $loading.removeClass('hidden');
-        get_time_series(watershed, subbasin, streamcomid, stationcode, stationname, startdate);
-        get_time_series_bc(watershed, subbasin, streamcomid, stationcode, stationname, startdate);
+        get_time_series(watershed, subbasin, streamcomid, stationid, stationcode, stationname, startdate);
+        get_time_series_bc(watershed, subbasin, streamcomid, stationid, stationcode, stationname, startdate);
     });
 
 });
@@ -978,7 +983,7 @@ function get_available_dates(watershed, subbasin, comid) {
     });
 }
 
-function get_time_series(watershed, subbasin, streamcomid, stationid, stationcode, stationname) {
+function get_time_series(watershed, subbasin, streamcomid, stationid, stationcode, stationname, startdate) {
     $('#forecast-loading').removeClass('hidden');
     $('#forecast-chart').addClass('hidden');
     $('#dates').addClass('hidden');
@@ -991,7 +996,8 @@ function get_time_series(watershed, subbasin, streamcomid, stationid, stationcod
             'streamcomid': streamcomid,
             'stationid': stationid,
             'stationcode': stationcode,
-            'stationname': stationname
+            'stationname': stationname,
+            'startdate': startdate,
         },
         error: function() {
             $('#info').html('<p class="alert alert-danger" style="text-align: center"><strong>An unknown error occurred while retrieving the forecast</strong></p>');
@@ -1022,7 +1028,8 @@ function get_time_series(watershed, subbasin, streamcomid, stationid, stationcod
                     streamcomid: streamcomid,
                     stationid: stationid,
                     stationcode: stationcode,
-                    stationname: stationname
+                    stationname: stationname,
+                    startdate: startdate,
                 };
 
                 $('#submit-download-forecast').attr({
@@ -1031,6 +1038,9 @@ function get_time_series(watershed, subbasin, streamcomid, stationid, stationcod
                 });
 
                 $('#download_forecast').removeClass('hidden');
+
+                console.log(startdate)
+                get_time_series_bc(watershed, subbasin, streamcomid, stationid, stationcode, stationname, startdate);
 
             } else if (data.error) {
                 $('#info').html('<p class="alert alert-danger" style="text-align: center"><strong>An unknown error occurred while retrieving the forecast</strong></p>');
@@ -1046,7 +1056,7 @@ function get_time_series(watershed, subbasin, streamcomid, stationid, stationcod
     });
 }
 
-function get_time_series_bc(watershed, subbasin, streamcomid, stationid, stationcode, stationname) {
+function get_time_series_bc(watershed, subbasin, streamcomid, stationid, stationcode, stationname, startdate) {
     $('#forecast-bc-loading').removeClass('hidden');
     $('#forecast-bc-chart').addClass('hidden');
     $('#dates').addClass('hidden');
@@ -1059,7 +1069,8 @@ function get_time_series_bc(watershed, subbasin, streamcomid, stationid, station
             'streamcomid': streamcomid,
             'stationid': stationid,
             'stationcode': stationcode,
-            'stationname': stationname
+            'stationname': stationname,
+            'startdate': startdate,
         },
         error: function() {
             $('#info').html('<p class="alert alert-danger" style="text-align: center"><strong>An unknown error occurred while retrieving the corrected forecast</strong></p>');
@@ -1090,7 +1101,8 @@ function get_time_series_bc(watershed, subbasin, streamcomid, stationid, station
                     streamcomid: streamcomid,
                     stationid: stationid,
                     stationcode: stationcode,
-                    stationname: stationname
+                    stationname: stationname,
+                    startdate: startdate,
                 };
 
                 $('#submit-download-forecast-bc').attr({
