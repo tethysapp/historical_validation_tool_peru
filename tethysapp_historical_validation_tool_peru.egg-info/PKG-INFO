@@ -1,10 +1,11 @@
 Metadata-Version: 1.0
 Name: tethysapp-historical-validation-tool-peru
-Version: 0.0.1
-Summary: This app evaluates the accuracy for the historical streamflow values obtained from Streamflow Prediction Tool in Peru.
+Version: 1.1
+Summary: This app combines the observed data and the simulated data from the GEOGloWS ECMWF Streaamflow Services in Peru.
 Home-page: UNKNOWN
 Author: Jorge Luis Sanchez-Lozano
 Author-email: jorgessanchez7@gmail.com
 License: UNKNOWN
 Description: UNKNOWN
+Keywords: "Hydrology","Time Series","Bias Correction","Hydrostats","GEOGloWS","Historical Validation Tool","Peru"
 Platform: UNKNOWN

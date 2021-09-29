@@ -158,7 +158,9 @@ function get_hydrographs (watershed, subbasin, streamcomid, stationid, stationco
             'stationcode': stationcode,
             'stationname': stationname
         },
-        error: function() {
+        error: function(e) {
+            $('#hydrographs-loading').addClass('hidden');
+            console.log(e);
             $('#info').html('<p class="alert alert-danger" style="text-align: center"><strong>An unknown error occurred while retrieving the data</strong></p>');
             $('#info').removeClass('hidden');
 
@@ -269,7 +271,10 @@ function get_dailyAverages (watershed, subbasin, streamcomid, stationid, station
             'stationcode': stationcode,
             'stationname': stationname
         },
-        error: function() {
+        error: function(e) {
+          console.log(e);
+          $('#dailyAverages-loading').addClass('hidden');
+
             $('#info').html('<p class="alert alert-danger" style="text-align: center"><strong>An unknown error occurred while retrieving the data</strong></p>');
             $('#info').removeClass('hidden');
 
@@ -321,7 +326,9 @@ function get_monthlyAverages (watershed, subbasin, streamcomid, stationid, stati
             'stationcode': stationcode,
             'stationname': stationname
         },
-        error: function() {
+        error: function(e) {
+          $('#monthlyAverages-loading').addClass('hidden');
+          console.log(e);
             $('#info').html('<p class="alert alert-danger" style="text-align: center"><strong>An unknown error occurred while retrieving the data</strong></p>');
             $('#info').removeClass('hidden');
 
@@ -374,6 +381,9 @@ function get_scatterPlot (watershed, subbasin, streamcomid, stationid, stationco
             'stationname': stationname
         },
         error: function() {
+            console.log(e);
+            $('#scatterPlot-loading').addClass('hidden');
+
             $('#info').html('<p class="alert alert-danger" style="text-align: center"><strong>An unknown error occurred while retrieving the data</strong></p>');
             $('#info').removeClass('hidden');
 
@@ -425,7 +435,9 @@ function get_scatterPlotLogScale (watershed, subbasin, streamcomid, stationid, s
             'stationcode': stationcode,
             'stationname': stationname
         },
-        error: function() {
+        error: function(e) {
+            $('#scatterPlotLogScale-loading').addClass('hidden');
+            console.log(e);
             $('#info').html('<p class="alert alert-danger" style="text-align: center"><strong>An unknown error occurred while retrieving the data</strong></p>');
             $('#info').removeClass('hidden');
 
@@ -477,7 +489,10 @@ function get_volumeAnalysis (watershed, subbasin, streamcomid, stationid, statio
             'stationcode': stationcode,
             'stationname': stationname
         },
-        error: function() {
+        error: function(e) {
+            console.log(e);
+            $('#volumeAnalysis-loading').addClass('hidden');
+
             $('#info').html('<p class="alert alert-danger" style="text-align: center"><strong>An unknown error occurred while retrieving the data</strong></p>');
             $('#info').removeClass('hidden');
 
@@ -558,6 +573,8 @@ function createVolumeTable(watershed, subbasin, streamcomid, stationid, stationc
 
         // handle a non-successful response
         error : function(xhr, errmsg, err) {
+          $('#volumeAnalysis-loading').addClass('hidden');
+            console.log(err);
             $('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+".</div>"); // add the error to the dom
             console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
         }
@@ -638,6 +655,17 @@ function map_events() {
                         			+ manager + '</h5><h5>Local Water Management: ' + local + '</h5>');
 
                         get_requestData(watershed, subbasin, streamcomid, stationid, stationcode, stationname, startdate);
+                    },
+                    error: function(e){
+                      console.log(e);
+                      $('#hydrographs-loading').addClass('hidden');
+              				$('#dailyAverages-loading').addClass('hidden');
+              				$('#monthlyAverages-loading').addClass('hidden');
+              				$('#scatterPlot-loading').addClass('hidden');
+              				$('#scatterPlotLogScale-loading').addClass('hidden');
+              				$('#volumeAnalysis-loading').addClass('hidden');
+              				$('#forecast-loading').addClass('hidden');
+              				$('#forecast-bc-loading').addClass('hidden');
                     }
                 });
             }
@@ -648,51 +676,94 @@ function map_events() {
 
 function resize_graphs() {
     $("#hydrographs_tab_link").click(function() {
-    	Plotly.Plots.resize($("#hydrographs-chart .js-plotly-plot")[0]);
-    	Plotly.relayout($("#hydrographs-chart .js-plotly-plot")[0], {
-        	'xaxis.autorange': true,
-        	'yaxis.autorange': true
-        });
+      try{
+        Plotly.Plots.resize($("#hydrographs-chart .js-plotly-plot")[0]);
+        Plotly.relayout($("#hydrographs-chart .js-plotly-plot")[0], {
+            'xaxis.autorange': true,
+            'yaxis.autorange': true
+          });
+      }
+      catch(e){
+        console.log(e);
+      }
+
     });
     $("#visualAnalysis_tab_link").click(function() {
-    	Plotly.Plots.resize($("#dailyAverages-chart .js-plotly-plot")[0]);
-    	Plotly.relayout($("#dailyAverages-chart .js-plotly-plot")[0], {
-        	'xaxis.autorange': true,
-        	'yaxis.autorange': true
+      try{
+        Plotly.Plots.resize($("#dailyAverages-chart .js-plotly-plot")[0]);
+        Plotly.relayout($("#dailyAverages-chart .js-plotly-plot")[0], {
+            'xaxis.autorange': true,
+            'yaxis.autorange': true
         });
+      }
+      catch(e){
+        console.log(e);
+      }
+      try{
         Plotly.Plots.resize($("#monthlyAverages-chart .js-plotly-plot")[0]);
-    	Plotly.relayout($("#monthlyAverages-chart .js-plotly-plot")[0], {
-        	'xaxis.autorange': true,
-        	'yaxis.autorange': true
+        Plotly.relayout($("#monthlyAverages-chart .js-plotly-plot")[0], {
+            'xaxis.autorange': true,
+            'yaxis.autorange': true
         });
+      }
+      catch(e){
+        console.log(e);
+      }
+      try{
         Plotly.Plots.resize($("#scatterPlot-chart .js-plotly-plot")[0]);
-    	Plotly.relayout($("#scatterPlot-chart .js-plotly-plot")[0], {
-        	'xaxis.autorange': true,
-        	'yaxis.autorange': true
+        Plotly.relayout($("#scatterPlot-chart .js-plotly-plot")[0], {
+            'xaxis.autorange': true,
+            'yaxis.autorange': true
         });
+      }
+      catch(e){
+        console.log(e);
+      }
+      try{
         Plotly.Plots.resize($("#scatterPlotLogScale-chart .js-plotly-plot")[0]);
-    	Plotly.relayout($("#scatterPlotLogScale-chart .js-plotly-plot")[0], {
-        	'xaxis.autorange': true,
-        	'yaxis.autorange': true
+        Plotly.relayout($("#scatterPlotLogScale-chart .js-plotly-plot")[0], {
+            'xaxis.autorange': true,
+            'yaxis.autorange': true
         });
+      }
+      catch(e){
+          console.log(e);
+      }
+      try{
         Plotly.Plots.resize($("#volumeAnalysis-chart .js-plotly-plot")[0]);
-    	Plotly.relayout($("#volumeAnalysis-chart .js-plotly-plot")[0], {
-        	'xaxis.autorange': true,
-        	'yaxis.autorange': true
-        });
+        Plotly.relayout($("#volumeAnalysis-chart .js-plotly-plot")[0], {
+            'xaxis.autorange': true,
+            'yaxis.autorange': true
+          });
+      }
+      catch(e){
+        console.log(e);
+      }
+
     });
 
     $("#forecast_tab_link").click(function() {
-        Plotly.Plots.resize($("#forecast-chart .js-plotly-plot")[0]);
-        Plotly.relayout($("#forecast-chart .js-plotly-plot")[0], {
-        	'xaxis.autorange': true,
-        	'yaxis.autorange': true
-        });
-        Plotly.Plots.resize($("#forecast-bc-chart .js-plotly-plot")[0]);
-        Plotly.relayout($("#forecast-bc-chart .js-plotly-plot")[0], {
-        	'xaxis.autorange': true,
-        	'yaxis.autorange': true
-        });
+        try{
+          Plotly.Plots.resize($("#forecast-chart .js-plotly-plot")[0]);
+          Plotly.relayout($("#forecast-chart .js-plotly-plot")[0], {
+            'xaxis.autorange': true,
+            'yaxis.autorange': true
+          });
+        }
+        catch(e){
+          console.log(e);
+        }
+        try{
+          Plotly.Plots.resize($("#forecast-bc-chart .js-plotly-plot")[0]);
+          Plotly.relayout($("#forecast-bc-chart .js-plotly-plot")[0], {
+            'xaxis.autorange': true,
+            'yaxis.autorange': true
+          });
+        }
+        catch(e){
+          console.log(e);
+        }
+
     });
 };
 
@@ -944,6 +1015,7 @@ function makeDefaultTable(watershed, subbasin, streamcomid, stationid, stationco
 
     // handle a non-successful response
     error : function(xhr, errmsg, err) {
+      console.log(err);
       $('#table').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+".</div>"); // add the error to the dom
       console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
     }
@@ -996,7 +1068,9 @@ function get_time_series(watershed, subbasin, streamcomid, stationid, stationcod
             'stationname': stationname,
             'startdate': startdate,
         },
-        error: function() {
+        error: function(e) {
+            $('#forecast-loading').addClass('hidden');
+            console.log(e);
             $('#info').html('<p class="alert alert-danger" style="text-align: center"><strong>An unknown error occurred while retrieving the forecast</strong></p>');
             $('#info').removeClass('hidden');
 
@@ -1068,7 +1142,9 @@ function get_time_series_bc(watershed, subbasin, streamcomid, stationid, station
             'stationname': stationname,
             'startdate': startdate,
         },
-        error: function() {
+        error: function(e) {
+          $('#forecast-bc-loading').addClass('hidden');
+          console.log(e);
             $('#info').html('<p class="alert alert-danger" style="text-align: center"><strong>An unknown error occurred while retrieving the corrected forecast</strong></p>');
             $('#info').removeClass('hidden');
 
