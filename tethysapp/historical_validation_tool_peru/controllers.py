@@ -199,7 +199,7 @@ def get_popup_response(request):
 
         print("finished get_popup_response")
 
-        print("--- %s seconds getpopup ---" % (time.time() - start_time))
+        #print("--- %s seconds getpopup ---" % (time.time() - start_time))
 
         return JsonResponse({})
 
@@ -254,7 +254,7 @@ def get_hydrographs(request):
             'gizmo_object': chart_obj,
         }
 
-        print("--- %s seconds hydrographs ---" % (time.time() - start_time))
+        #print("--- %s seconds hydrographs ---" % (time.time() - start_time))
 
         return render(request, 'historical_validation_tool_peru/gizmo_ajax.html', context)
 
@@ -310,7 +310,7 @@ def get_dailyAverages(request):
             'gizmo_object': chart_obj,
         }
 
-        print("--- %s seconds dailyAverages ---" % (time.time() - start_time))
+        #print("--- %s seconds dailyAverages ---" % (time.time() - start_time))
 
         return render(request, 'historical_validation_tool_peru/gizmo_ajax.html', context)
 
@@ -367,7 +367,7 @@ def get_monthlyAverages(request):
             'gizmo_object': chart_obj,
         }
 
-        print("--- %s seconds monthlyAverages ---" % (time.time() - start_time))
+        #print("--- %s seconds monthlyAverages ---" % (time.time() - start_time))
 
         return render(request, 'historical_validation_tool_peru/gizmo_ajax.html', context)
 
@@ -463,7 +463,7 @@ def get_scatterPlot(request):
             'gizmo_object': chart_obj,
         }
 
-        print("--- %s seconds scatterPlot ---" % (time.time() - start_time))
+        #print("--- %s seconds scatterPlot ---" % (time.time() - start_time))
 
         return render(request, 'historical_validation_tool_peru/gizmo_ajax.html', context)
 
@@ -533,7 +533,7 @@ def get_scatterPlotLogScale(request):
             'gizmo_object': chart_obj,
         }
 
-        print("--- %s seconds scatterPlot_log ---" % (time.time() - start_time))
+        #print("--- %s seconds scatterPlot_log ---" % (time.time() - start_time))
 
         return render(request, 'historical_validation_tool_peru/gizmo_ajax.html', context)
 
@@ -610,7 +610,7 @@ def get_volumeAnalysis(request):
             'gizmo_object': chart_obj,
         }
 
-        print("--- %s seconds volumeAnalysis ---" % (time.time() - start_time))
+        #print("--- %s seconds volumeAnalysis ---" % (time.time() - start_time))
 
         return render(request, 'historical_validation_tool_peru/gizmo_ajax.html', context)
 
@@ -653,7 +653,7 @@ def volume_table_ajax(request):
             "corr_volume": corr_volume,
         }
 
-        print("--- %s seconds volumeAnalysis_table ---" % (time.time() - start_time))
+        #print("--- %s seconds volumeAnalysis_table ---" % (time.time() - start_time))
 
         return JsonResponse(resp)
 
@@ -791,7 +791,7 @@ def make_table_ajax(request):
         table_final_html = table_final.to_html(classes="table table-hover table-striped",
                                                table_id="corrected_1").replace('border="1"', 'border="0"')
 
-        print("--- %s seconds metrics_table ---" % (time.time() - start_time))
+        #print("--- %s seconds metrics_table ---" % (time.time() - start_time))
 
         return HttpResponse(table_final_html)
 
@@ -928,7 +928,7 @@ def get_time_series(request):
             'gizmo_object': chart_obj,
         }
 
-        print("--- %s seconds forecasts ---" % (time.time() - start_time))
+        #print("--- %s seconds forecasts ---" % (time.time() - start_time))
 
         return render(request, 'historical_validation_tool_peru/gizmo_ajax.html', context)
 
@@ -1147,7 +1147,7 @@ def get_time_series_bc(request):
             'gizmo_object': chart_obj,
         }
 
-        print("--- %s seconds forecasts_bc ---" % (time.time() - start_time))
+        #print("--- %s seconds forecasts_bc ---" % (time.time() - start_time))
 
         return render(request, 'historical_validation_tool_peru/gizmo_ajax.html', context)
 

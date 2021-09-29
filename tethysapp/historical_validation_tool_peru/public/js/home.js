@@ -22,7 +22,6 @@ function get_requestData (watershed, subbasin, streamcomid, stationid, stationco
       },
       success: function (data) {
 
-        console.log(startdate)
         get_hydrographs (watershed, subbasin, streamcomid, stationid, stationcode, stationname, startdate);
       }
   })
@@ -231,8 +230,6 @@ function get_hydrographs (watershed, subbasin, streamcomid, stationid, stationco
                 });
 
                 $('#download_simulated_bc_discharge').removeClass('hidden');
-
-                console.log(startdate)
 
                 get_dailyAverages (watershed, subbasin, streamcomid, stationid, stationcode, stationname);
 				get_monthlyAverages (watershed, subbasin, streamcomid, stationid, stationcode, stationname);
@@ -639,7 +636,7 @@ function map_events() {
                         			+ streamcomid+ '</h5><h5>Basin: '+ basin + '</h5><h5>Stream: '
                         			+ stream + '</h5><h5>Water Management Authority: '
                         			+ manager + '</h5><h5>Local Water Management: ' + local + '</h5>');
-                        console.log(startdate)
+
                         get_requestData(watershed, subbasin, streamcomid, stationid, stationcode, stationname, startdate);
                     }
                 });
@@ -1039,7 +1036,6 @@ function get_time_series(watershed, subbasin, streamcomid, stationid, stationcod
 
                 $('#download_forecast').removeClass('hidden');
 
-                console.log(startdate)
                 get_time_series_bc(watershed, subbasin, streamcomid, stationid, stationcode, stationname, startdate);
 
             } else if (data.error) {
