@@ -253,6 +253,8 @@ function get_hydrographs (watershed, subbasin, streamcomid, stationid, stationco
 
 
            		 } else if (data.error) {
+                 $('#hydrographs-loading').addClass('hidden');
+                 console.log(data.error);
            		 	$('#info').html('<p class="alert alert-danger" style="text-align: center"><strong>An unknown error occurred while retrieving the Data</strong></p>');
            		 	$('#info').removeClass('hidden');
 
@@ -312,6 +314,8 @@ function get_dailyAverages (watershed, subbasin, streamcomid, stationid, station
                 });
 
            		 } else if (data.error) {
+                 console.log(data.error);
+                 $('#dailyAverages-loading').addClass('hidden');
            		 	$('#info').html('<p class="alert alert-danger" style="text-align: center"><strong>An unknown error occurred while retrieving the Data</strong></p>');
            		 	$('#info').removeClass('hidden');
 
@@ -372,6 +376,8 @@ function get_monthlyAverages (watershed, subbasin, streamcomid, stationid, stati
                 });
 
            		 } else if (data.error) {
+                 console.log(data.error);
+                 $('#monthlyAverages-loading').addClass('hidden');
            		 	$('#info').html('<p class="alert alert-danger" style="text-align: center"><strong>An unknown error occurred while retrieving the Data</strong></p>');
            		 	$('#info').removeClass('hidden');
 
@@ -432,6 +438,8 @@ function get_scatterPlot (watershed, subbasin, streamcomid, stationid, stationco
                 });
 
            		 } else if (data.error) {
+                 console.log(data.error);
+                 $('#scatterPlot-loading').addClass('hidden');
            		 	$('#info').html('<p class="alert alert-danger" style="text-align: center"><strong>An unknown error occurred while retrieving the Data</strong></p>');
            		 	$('#info').removeClass('hidden');
 
@@ -490,6 +498,8 @@ function get_scatterPlotLogScale (watershed, subbasin, streamcomid, stationid, s
                 });
 
            		 } else if (data.error) {
+                 $('#scatterPlotLogScale-loading').addClass('hidden');
+                 console.log(data.error);
            		 	$('#info').html('<p class="alert alert-danger" style="text-align: center"><strong>An unknown error occurred while retrieving the Data</strong></p>');
            		 	$('#info').removeClass('hidden');
 
@@ -533,7 +543,6 @@ function get_volumeAnalysis (watershed, subbasin, streamcomid, stationid, statio
         success: function (data) {
             if (!data.error) {
                 console.log("get_volumeAnalysis in");
-
                 $('#volumeAnalysis-loading').addClass('hidden');
                 $('#dates').removeClass('hidden');
 //                $('#obsdates').removeClass('hidden');
@@ -549,6 +558,8 @@ function get_volumeAnalysis (watershed, subbasin, streamcomid, stationid, statio
                 });
 
            		 } else if (data.error) {
+                 console.log(data.error);
+                 $('#volumeAnalysis-loading').addClass('hidden');
            		 	$('#info').html('<p class="alert alert-danger" style="text-align: center"><strong>An unknown error occurred while retrieving the Data</strong></p>');
            		 	$('#info').removeClass('hidden');
 
@@ -1152,6 +1163,8 @@ function get_time_series(watershed, subbasin, streamcomid, stationid, stationcod
                 get_time_series_bc(watershed, subbasin, streamcomid, stationid, stationcode, stationname, startdate);
 
             } else if (data.error) {
+                $('#forecast-loading').addClass('hidden');
+                console.log(data.error);
                 $('#info').html('<p class="alert alert-danger" style="text-align: center"><strong>An unknown error occurred while retrieving the forecast</strong></p>');
                 $('#info').removeClass('hidden');
 
@@ -1228,6 +1241,8 @@ function get_time_series_bc(watershed, subbasin, streamcomid, stationid, station
                 $('#download_forecast_bc').removeClass('hidden');
 
             } else if (data.error) {
+              $('#forecast-bc-loading').addClass('hidden');
+              console.log(data.error);
                 $('#info').html('<p class="alert alert-danger" style="text-align: center"><strong>An unknown error occurred while retrieving the corrected forecast</strong></p>');
                 $('#info').removeClass('hidden');
 
