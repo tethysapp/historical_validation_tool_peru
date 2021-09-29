@@ -12,10 +12,18 @@ function get_requestData (watershed, subbasin, streamcomid, stationid, stationco
       url: 'get-request-data',
       type: 'GET',
       data: getdata,
-      error: function() {
+      error: function(e) {
           $('#info').html('<p class="alert alert-danger" style="text-align: center"><strong>An unknown error occurred while retrieving the data</strong></p>');
           $('#info').removeClass('hidden');
-
+          console.log(e);
+          $('#hydrographs-loading').addClass('hidden');
+          $('#dailyAverages-loading').addClass('hidden');
+          $('#monthlyAverages-loading').addClass('hidden');
+          $('#scatterPlot-loading').addClass('hidden');
+          $('#scatterPlotLogScale-loading').addClass('hidden');
+          $('#volumeAnalysis-loading').addClass('hidden');
+          $('#forecast-loading').addClass('hidden');
+          $('#forecast-bc-loading').addClass('hidden');
           setTimeout(function () {
               $('#info').addClass('hidden')
           }, 5000);
@@ -170,6 +178,7 @@ function get_hydrographs (watershed, subbasin, streamcomid, stationid, stationco
         },
         success: function (data) {
             if (!data.error) {
+                console.log("get_hydrographs in");
                 $('#hydrographs-loading').addClass('hidden');
                 $('#dates').removeClass('hidden');
 //                $('#obsdates').removeClass('hidden');
@@ -253,6 +262,8 @@ function get_hydrographs (watershed, subbasin, streamcomid, stationid, stationco
            		 } else {
            		 	$('#info').html('<p><strong>An unexplainable error occurred.</strong></p>').removeClass('hidden');
            		 }
+               console.log("get_hydrographs out");
+
        		}
     });
 };
@@ -284,6 +295,8 @@ function get_dailyAverages (watershed, subbasin, streamcomid, stationid, station
         },
         success: function (data) {
             if (!data.error) {
+                console.log("get_dailyAverages in");
+
                 $('#dailyAverages-loading').addClass('hidden');
                 $('#dates').removeClass('hidden');
 //                $('#obsdates').removeClass('hidden');
@@ -308,12 +321,15 @@ function get_dailyAverages (watershed, subbasin, streamcomid, stationid, station
            		 } else {
            		 	$('#info').html('<p><strong>An unexplainable error occurred.</strong></p>').removeClass('hidden');
            		 }
+               console.log("get_dailyAverages out");
+
        		}
     });
 };
 
 function get_monthlyAverages (watershed, subbasin, streamcomid, stationid, stationcode, stationname) {
 	$('#monthlyAverages-loading').removeClass('hidden');
+
 	m_downloaded_historical_streamflow = true;
     $.ajax({
         url: 'get-monthlyAverages',
@@ -337,7 +353,10 @@ function get_monthlyAverages (watershed, subbasin, streamcomid, stationid, stati
             }, 5000);
         },
         success: function (data) {
+
             if (!data.error) {
+                console.log("get_monthlyAverages in");
+
                 $('#monthlyAverages-loading').addClass('hidden');
                 $('#dates').removeClass('hidden');
 //                $('#obsdates').removeClass('hidden');
@@ -362,12 +381,15 @@ function get_monthlyAverages (watershed, subbasin, streamcomid, stationid, stati
            		 } else {
            		 	$('#info').html('<p><strong>An unexplainable error occurred.</strong></p>').removeClass('hidden');
            		 }
+               console.log("get_monthlyAverages out");
+
        		}
     });
 };
 
 function get_scatterPlot (watershed, subbasin, streamcomid, stationid, stationcode, stationname) {
 	$('#scatterPlot-loading').removeClass('hidden');
+
 	m_downloaded_historical_streamflow = true;
     $.ajax({
         url: 'get-scatterPlot',
@@ -392,6 +414,8 @@ function get_scatterPlot (watershed, subbasin, streamcomid, stationid, stationco
             }, 5000);
         },
         success: function (data) {
+          console.log("get_scatterPlot in");
+
             if (!data.error) {
                 $('#scatterPlot-loading').addClass('hidden');
                 $('#dates').removeClass('hidden');
@@ -417,6 +441,8 @@ function get_scatterPlot (watershed, subbasin, streamcomid, stationid, stationco
            		 } else {
            		 	$('#info').html('<p><strong>An unexplainable error occurred.</strong></p>').removeClass('hidden');
            		 }
+               console.log("get_scatterPlot out");
+
        		}
     });
 };
@@ -447,6 +473,8 @@ function get_scatterPlotLogScale (watershed, subbasin, streamcomid, stationid, s
         },
         success: function (data) {
             if (!data.error) {
+                console.log("get_scatterPlotLogScale in");
+
                 $('#scatterPlotLogScale-loading').addClass('hidden');
                 $('#dates').removeClass('hidden');
 //                $('#obsdates').removeClass('hidden');
@@ -471,6 +499,8 @@ function get_scatterPlotLogScale (watershed, subbasin, streamcomid, stationid, s
            		 } else {
            		 	$('#info').html('<p><strong>An unexplainable error occurred.</strong></p>').removeClass('hidden');
            		 }
+               console.log("get_scatterPlotLogScale out");
+
        		}
     });
 };
@@ -502,6 +532,8 @@ function get_volumeAnalysis (watershed, subbasin, streamcomid, stationid, statio
         },
         success: function (data) {
             if (!data.error) {
+                console.log("get_volumeAnalysis in");
+
                 $('#volumeAnalysis-loading').addClass('hidden');
                 $('#dates').removeClass('hidden');
 //                $('#obsdates').removeClass('hidden');
@@ -526,6 +558,8 @@ function get_volumeAnalysis (watershed, subbasin, streamcomid, stationid, statio
            		 } else {
            		 	$('#info').html('<p><strong>An unexplainable error occurred.</strong></p>').removeClass('hidden');
            		 }
+               console.log("get_volumeAnalysis out");
+
        		}
     });
 };
@@ -548,6 +582,7 @@ function createVolumeTable(watershed, subbasin, streamcomid, stationid, stationc
 
         // handle a successful response
         success : function(resp) {
+            console.log("createVolumeTable in");
 
             let obs_volume = resp["obs_volume"].toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
             let sim_volume = resp["sim_volume"].toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
@@ -569,6 +604,8 @@ function createVolumeTable(watershed, subbasin, streamcomid, stationid, stationc
                                           </tr>\
                                         </tbody>\
                                       </table>`);
+            console.log("createVolumeTable out");
+
         },
 
         // handle a non-successful response
@@ -1080,6 +1117,8 @@ function get_time_series(watershed, subbasin, streamcomid, stationid, stationcod
         },
         success: function(data) {
             if (!data.error) {
+              console.log("get_time_series in");
+
                 $('#forecast-loading').addClass('hidden');
                 $('#dates').removeClass('hidden');
                 //$loading.addClass('hidden');
@@ -1122,6 +1161,8 @@ function get_time_series(watershed, subbasin, streamcomid, stationid, stationcod
             } else {
                 $('#info').html('<p><strong>An unexplainable error occurred.</strong></p>').removeClass('hidden');
             }
+            console.log("get_time_series out");
+
         }
     });
 }
@@ -1154,6 +1195,8 @@ function get_time_series_bc(watershed, subbasin, streamcomid, stationid, station
         },
         success: function(data) {
             if (!data.error) {
+                console.log("get_time_series_bc in");
+
                 $('#forecast-bc-loading').addClass('hidden');
                 $('#dates').removeClass('hidden');
                 //$loading.addClass('hidden');
@@ -1194,6 +1237,8 @@ function get_time_series_bc(watershed, subbasin, streamcomid, stationid, station
             } else {
                 $('#info').html('<p><strong>An unexplainable error occurred.</strong></p>').removeClass('hidden');
             }
+            console.log("get_time_series_bc out");
+
         }
     });
 }
