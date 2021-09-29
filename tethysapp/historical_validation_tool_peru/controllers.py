@@ -205,7 +205,8 @@ def get_popup_response(request):
 
     except Exception as e:
         print(str(e))
-        return JsonResponse({'error': 'No data found for the selected station.'})
+        # return JsonResponse({'error': 'No data found for the selected station.'})
+        return JsonResponse({'error': f'{str(e)}'})
 
 
 def get_hydrographs(request):
@@ -260,7 +261,8 @@ def get_hydrographs(request):
 
     except Exception as e:
         print(str(e))
-        return JsonResponse({'error': 'No data found for the selected station.'})
+        # return JsonResponse({'error': 'No data found for the selected station.'})
+        return JsonResponse({'error': f'{str(e)}'})
 
 
 def get_dailyAverages(request):
@@ -316,7 +318,9 @@ def get_dailyAverages(request):
 
     except Exception as e:
         print(str(e))
-        return JsonResponse({'error': 'No data found for the selected station.'})
+        return JsonResponse({'error': f'{str(e)}'})
+
+        # return JsonResponse({'error': 'No data found for the selected station.'})
 
 
 def get_monthlyAverages(request):
@@ -373,7 +377,8 @@ def get_monthlyAverages(request):
 
     except Exception as e:
         print(str(e))
-        return JsonResponse({'error': 'No data found for the selected station.'})
+        # return JsonResponse({'error': 'No data found for the selected station.'})
+        return JsonResponse({'error': f'{str(e)}'})
 
 
 def get_scatterPlot(request):
@@ -469,7 +474,8 @@ def get_scatterPlot(request):
 
     except Exception as e:
         print(str(e))
-        return JsonResponse({'error': 'No data found for the selected station.'})
+        # return JsonResponse({'error': 'No data found for the selected station.'})
+        return JsonResponse({'error': f'{str(e)}'})
 
 
 def get_scatterPlotLogScale(request):
@@ -539,7 +545,9 @@ def get_scatterPlotLogScale(request):
 
     except Exception as e:
         print(str(e))
-        return JsonResponse({'error': 'No data found for the selected station.'})
+        # return JsonResponse({'error': 'No data found for the selected station.'})
+        return JsonResponse({'error': f'{str(e)}'})
+
 
 
 def get_volumeAnalysis(request):
@@ -616,7 +624,9 @@ def get_volumeAnalysis(request):
 
     except Exception as e:
         print(str(e))
-        return JsonResponse({'error': 'No data found for the selected station.'})
+        return JsonResponse({'error': f'{str(e)}'})
+
+        # return JsonResponse({'error': 'No data found for the selected station.'})
 
 
 def volume_table_ajax(request):
@@ -659,7 +669,9 @@ def volume_table_ajax(request):
 
     except Exception as e:
         print(str(e))
-        return JsonResponse({'error': 'No data found for the selected station.'})
+        return JsonResponse({'error': f'{str(e)}'})
+
+        # return JsonResponse({'error': 'No data found for the selected station.'})
 
 
 def make_table_ajax(request):
@@ -795,9 +807,11 @@ def make_table_ajax(request):
 
         return HttpResponse(table_final_html)
 
-    except Exception:
+    except Exception as e:
         traceback.print_exc()
-        return JsonResponse({'error': 'No data found for the selected station.'})
+        # return JsonResponse({'error': 'No data found for the selected station.'})
+        return JsonResponse({'error': f'{str(e)}'})
+
 
 
 def get_units_title(unit_type):
@@ -934,7 +948,7 @@ def get_time_series(request):
 
     except Exception as e:
         print(str(e))
-        return JsonResponse({'error': 'No data found for the selected reach.'})
+        return JsonResponse({'error': f'{str(e)}'})
 
 
 def get_time_series_bc(request):
@@ -1153,7 +1167,9 @@ def get_time_series_bc(request):
 
     except Exception as e:
         print(str(e))
-        return JsonResponse({'error': 'No data found for the selected reach.'})
+        # return JsonResponse({'error': 'No data found for the selected reach.'})
+        return JsonResponse({'error': f'{str(e)}'})
+
 
 
 def get_available_dates(request):
@@ -1251,7 +1267,9 @@ def get_simulated_discharge_csv(request):
 
     except Exception as e:
         print(str(e))
-        return JsonResponse({'error': 'An unknown error occurred while retrieving the Discharge Data.'})
+        # return JsonResponse({'error': 'An unknown error occurred while retrieving the Discharge Data.'})
+        return JsonResponse({'error': f'{str(e)}'})
+
 
 
 def get_simulated_bc_discharge_csv(request):
@@ -1279,7 +1297,9 @@ def get_simulated_bc_discharge_csv(request):
 
     except Exception as e:
         print(str(e))
-        return JsonResponse({'error': 'An unknown error occurred while retrieving the Discharge Data.'})
+        # return JsonResponse({'error': 'An unknown error occurred while retrieving the Discharge Data.'})
+        return JsonResponse({'error': f'{str(e)}'})
+
 
 
 def get_forecast_data_csv(request):
@@ -1307,7 +1327,9 @@ def get_forecast_data_csv(request):
 
     except Exception as e:
         print(str(e))
-        return JsonResponse({'error': 'No forecast data found.'})
+        # return JsonResponse({'error': 'No forecast data found.'})
+        return JsonResponse({'error': f'{str(e)}'})
+
 
 def get_forecast_bc_data_csv(request):
     """""
@@ -1334,4 +1356,5 @@ def get_forecast_bc_data_csv(request):
 
     except Exception as e:
         print(str(e))
-        return JsonResponse({'error': 'No forecast data found.'})
+        # return JsonResponse({'error': 'No forecast data found.'})
+        return JsonResponse({'error': f'{str(e)}'})
