@@ -211,7 +211,7 @@ def get_popup_response(request):
 		print("line: " + str(exc_tb.tb_lineno))
 
 		return JsonResponse({
-			'error': f'{"error: " + str(e), "line: " + str(exc_tb.tb_lineno)}',
+			'error': f'{"error: " + str(e), ". line: " + str(exc_tb.tb_lineno)}',
 		})
 		# return JsonResponse({'error': 'No data found for the selected station.'})
 
@@ -273,7 +273,7 @@ def get_hydrographs(request):
 		print("line: " + str(exc_tb.tb_lineno))
 
 		return JsonResponse({
-			'error': f'{"error: " + str(e), "line: " + str(exc_tb.tb_lineno)}',
+			'error': f'{"error: " + str(e), ". line: " + str(exc_tb.tb_lineno)}',
 		})
 
 		# return JsonResponse({'error': 'No data found for the selected station.'})
@@ -338,7 +338,7 @@ def get_dailyAverages(request):
 		print("line: " + str(exc_tb.tb_lineno))
 
 		return JsonResponse({
-			'error': f'{"error: " + str(e), "line: " + str(exc_tb.tb_lineno)}',
+			'error': f'{"error: " + str(e), ". line: " + str(exc_tb.tb_lineno)}',
 		})
 
 		# return JsonResponse({'error': 'No data found for the selected station.'})
@@ -509,7 +509,7 @@ def get_scatterPlot(request):
 		print("line: " + str(exc_tb.tb_lineno))
 
 		return JsonResponse({
-			'error': f'{"error: " + str(e), "line: " + str(exc_tb.tb_lineno)}',
+			'error': f'{"error: " + str(e), ". line: " + str(exc_tb.tb_lineno)}',
 		})
 
 		# return JsonResponse({'error': 'No data found for the selected station.'})
@@ -588,7 +588,7 @@ def get_scatterPlotLogScale(request):
 		print("line: " + str(exc_tb.tb_lineno))
 
 		return JsonResponse({
-			'error': f'{"error: " + str(e), "line: " + str(exc_tb.tb_lineno)}',
+			'error': f'{"error: " + str(e), ". line: " + str(exc_tb.tb_lineno)}',
 		})
 
 		# return JsonResponse({'error': 'No data found for the selected station.'})
@@ -674,7 +674,7 @@ def get_volumeAnalysis(request):
 		print("line: " + str(exc_tb.tb_lineno))
 
 		return JsonResponse({
-			'error': f'{"error: " + str(e), "line: " + str(exc_tb.tb_lineno)}',
+			'error': f'{"error: " + str(e), ". line: " + str(exc_tb.tb_lineno)}',
 		})
 
 		# return JsonResponse({'error': 'No data found for the selected station.'})
@@ -726,7 +726,7 @@ def volume_table_ajax(request):
 		print("line: " + str(exc_tb.tb_lineno))
 
 		return JsonResponse({
-			'error': f'{"error: " + str(e), "line: " + str(exc_tb.tb_lineno)}',
+			'error': f'{"error: " + str(e), ". line: " + str(exc_tb.tb_lineno)}',
 		})
 
 		# return JsonResponse({'error': 'No data found for the selected station.'})
@@ -873,7 +873,7 @@ def make_table_ajax(request):
 		print("line: " + str(exc_tb.tb_lineno))
 
 		return JsonResponse({
-			'error': f'{"error: " + str(e), "line: " + str(exc_tb.tb_lineno)}',
+			'error': f'{"error: " + str(e), ". line: " + str(exc_tb.tb_lineno)}',
 		})
 
 		# return JsonResponse({'error': 'No data found for the selected station.'})
@@ -1019,7 +1019,7 @@ def get_time_series(request):
 		print("line: " + str(exc_tb.tb_lineno))
 
 		return JsonResponse({
-			'error': f'{"error: " + str(e), "line: " + str(exc_tb.tb_lineno)}',
+			'error': f'{"error: " + str(e), ". line: " + str(exc_tb.tb_lineno)}',
 		})
 
 		# return JsonResponse({'error': 'No data found for the selected station.'})
@@ -1245,7 +1245,7 @@ def get_time_series_bc(request):
 		print("line: " + str(exc_tb.tb_lineno))
 
 		return JsonResponse({
-			'error': f'{"error: " + str(e), "line: " + str(exc_tb.tb_lineno)}',
+			'error': f'{"error: " + str(e), ". line: " + str(exc_tb.tb_lineno)}',
 		})
 
 		# return JsonResponse({'error': 'No data found for the selected station.'})
@@ -1321,7 +1321,7 @@ def get_observed_discharge_csv(request):
 		print("line: " + str(exc_tb.tb_lineno))
 
 		return JsonResponse({
-			'error': f'{"error: " + str(e), "line: " + str(exc_tb.tb_lineno)}',
+			'error': f'{"error: " + str(e), ". line: " + str(exc_tb.tb_lineno)}',
 		})
 		
 		# return JsonResponse({'error': 'No data found for the selected station.'})
@@ -1361,7 +1361,7 @@ def get_simulated_discharge_csv(request):
 		print("line: " + str(exc_tb.tb_lineno))
 
 		return JsonResponse({
-			'error': f'{"error: " + str(e), "line: " + str(exc_tb.tb_lineno)}',
+			'error': f'{"error: " + str(e), ". line: " + str(exc_tb.tb_lineno)}',
 		})
 
 		# return JsonResponse({'error': 'No data found for the selected station.'})
@@ -1399,7 +1399,7 @@ def get_simulated_bc_discharge_csv(request):
 		print("line: " + str(exc_tb.tb_lineno))
 
 		return JsonResponse({
-			'error': f'{"error: " + str(e), "line: " + str(exc_tb.tb_lineno)}',
+			'error': f'{"error: " + str(e), ". line: " + str(exc_tb.tb_lineno)}',
 		})
 
 		# return JsonResponse({'error': 'No data found for the selected station.'})
@@ -1437,7 +1437,7 @@ def get_forecast_data_csv(request):
 		print("line: " + str(exc_tb.tb_lineno))
 
 		return JsonResponse({
-			'error': f'{"error: " + str(e), "line: " + str(exc_tb.tb_lineno)}',
+			'error': f'{"error: " + str(e), ". line: " + str(exc_tb.tb_lineno)}',
 		})
 
 		# return JsonResponse({'error': 'No data found for the selected station.'})
@@ -1465,13 +1465,12 @@ def get_forecast_bc_data_csv(request):
 		fixed_stats.to_csv(encoding='utf-8', header=True, path_or_buf=response)
 
 		return response
-	
 	except Exception as e:
 		exc_type, exc_obj, exc_tb = sys.exc_info()
 		print("error: " + str(e))
 		print("line: " + str(exc_tb.tb_lineno))
 
 		return JsonResponse({
-			'error': f'{"error: " + str(e), "line: " + str(exc_tb.tb_lineno)}',
+			'error': f'{"error: " + str(e), ". line: " + str(exc_tb.tb_lineno)}',
 		})
 		# return JsonResponse({'error': 'No data found for the selected station.'})
