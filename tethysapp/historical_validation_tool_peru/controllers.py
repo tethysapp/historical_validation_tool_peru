@@ -329,15 +329,15 @@ def get_dailyAverages(request):
 
 		return render(request, 'historical_validation_tool_peru/gizmo_ajax.html', context)
 
+
 	except Exception as e:
 		exc_type, exc_obj, exc_tb = sys.exc_info()
 		print("error: " + str(e))
 		print("line: " + str(exc_tb.tb_lineno))
 
 		return JsonResponse({
-			'error': f'{"error: " + str(e), "line: " + str(exc_tb.tb_lineno)}',
+			'error': f'{"error: " + str(e), "line: " + str(exc_tb.tb_lineno), "sim_ini: " + str(simulated_df.index[0]), "sim_end: " + str(simulated_df.index[-1]), "obs_ini: " + str(observed_df.index[0]), "obs_end: " + str(observed_df.index[-1])}',
 		})
-
 		# return JsonResponse({'error': 'No data found for the selected station.'})
 
 
@@ -1002,7 +1002,7 @@ def get_time_series(request):
 		print("line: " + str(exc_tb.tb_lineno))
 
 		return JsonResponse({
-			'error': f'{"error: " + str(e), "line: " + str(exc_tb.tb_lineno), "sim_ini: " + str(simulated_df.index[0]), "sim_end: " + str(simulated_df.index[-1]), "obs_ini: " + str(observed_df.index[0]), "obs_end: " + str(observed_df.index[-1])}',
+			'error': f'{"error: " + str(e), "line: " + str(exc_tb.tb_lineno), "sim_ini: " + str(simulated_df.index[0]), "sim_end: " + str(simulated_df.index[-1]), "obs_ini: " + str(observed_df.index[0]), "obs_end: " + str(observed_df.index[-1]), "forecast_ini: " + str(forecast_df.index[0]), "forecast_end: " + str(forecast_df.index[-1])}',
 		})
 		# return JsonResponse({'error': 'No data found for the selected station.'})
 
@@ -1222,13 +1222,14 @@ def get_time_series_bc(request):
 		return render(request, 'historical_validation_tool_peru/gizmo_ajax.html', context)
 
 
+
 	except Exception as e:
 		exc_type, exc_obj, exc_tb = sys.exc_info()
 		print("error: " + str(e))
 		print("line: " + str(exc_tb.tb_lineno))
 
 		return JsonResponse({
-			'error': f'{"error: " + str(e), "line: " + str(exc_tb.tb_lineno), "sim_ini: " + str(simulated_df.index[0]), "sim_end: " + str(simulated_df.index[-1]), "obs_ini: " + str(observed_df.index[0]), "obs_end: " + str(observed_df.index[-1])}',
+			'error': f'{"error: " + str(e), "line: " + str(exc_tb.tb_lineno), "sim_ini: " + str(simulated_df.index[0]), "sim_end: " + str(simulated_df.index[-1]), "obs_ini: " + str(observed_df.index[0]), "obs_end: " + str(observed_df.index[-1]), "forecast_ini: " + str(fixed_stats.index[0]), "forecast_end: " + str(fixed_stats.index[-1])}',
 		})
 		# return JsonResponse({'error': 'No data found for the selected station.'})
 
