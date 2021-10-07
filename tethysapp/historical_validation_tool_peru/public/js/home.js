@@ -29,7 +29,8 @@ function get_requestData (watershed, subbasin, streamcomid, stationid, stationco
           }, 5000);
       },
       success: function (data) {
-
+        // let data_marica = data['observed_df'];
+        // console.log(data_marica);
         get_hydrographs (watershed, subbasin, streamcomid, stationid, stationcode, stationname, startdate);
       }
   })
@@ -164,8 +165,10 @@ function get_hydrographs (watershed, subbasin, streamcomid, stationid, stationco
             'streamcomid': streamcomid,
             'stationid': stationid,
             'stationcode': stationcode,
-            'stationname': stationname
+            'stationname': stationname,
+            // 'observed_df':observed_df
         },
+        contentType: "application/json",
         error: function(e) {
             $('#hydrographs-loading').addClass('hidden');
             console.log(e);
