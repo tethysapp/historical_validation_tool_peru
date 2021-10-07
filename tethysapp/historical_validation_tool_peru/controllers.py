@@ -211,7 +211,7 @@ def get_popup_response(request):
 		print("line: " + str(exc_tb.tb_lineno))
 
 		return JsonResponse({
-			'error': f'{"error: " + str(e), ". line: " + str(exc_tb.tb_lineno)}',
+			'error': f'{"error: " + str(e), "line: " + str(exc_tb.tb_lineno)}',
 		})
 		# return JsonResponse({'error': 'No data found for the selected station.'})
 
@@ -266,14 +266,13 @@ def get_hydrographs(request):
 
 		return render(request, 'historical_validation_tool_peru/gizmo_ajax.html', context)
 
-
 	except Exception as e:
 		exc_type, exc_obj, exc_tb = sys.exc_info()
 		print("error: " + str(e))
 		print("line: " + str(exc_tb.tb_lineno))
 
 		return JsonResponse({
-			'error': f'{"error: " + str(e), ". line: " + str(exc_tb.tb_lineno)}',
+			'error': f'{"error: " + str(e), "line: " + str(exc_tb.tb_lineno)}',
 		})
 
 		# return JsonResponse({'error': 'No data found for the selected station.'})
@@ -330,15 +329,13 @@ def get_dailyAverages(request):
 
 		return render(request, 'historical_validation_tool_peru/gizmo_ajax.html', context)
 
-
-
 	except Exception as e:
 		exc_type, exc_obj, exc_tb = sys.exc_info()
 		print("error: " + str(e))
 		print("line: " + str(exc_tb.tb_lineno))
 
 		return JsonResponse({
-			'error': f'{"error: " + str(e), ". line: " + str(exc_tb.tb_lineno)}',
+			'error': f'{"error: " + str(e), "line: " + str(exc_tb.tb_lineno)}',
 		})
 
 		# return JsonResponse({'error': 'No data found for the selected station.'})
@@ -396,17 +393,15 @@ def get_monthlyAverages(request):
 
 		return render(request, 'historical_validation_tool_peru/gizmo_ajax.html', context)
 
-
 	except Exception as e:
 		exc_type, exc_obj, exc_tb = sys.exc_info()
-		fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-		print(exc_type, fname, exc_tb.tb_lineno)
-		print(str(e))
+		print("error: " + str(e))
+		print("line: " + str(exc_tb.tb_lineno))
+
 		return JsonResponse({
-			'error': f'{str(e)}',
-			'exc_type': f'{str(exc_type)}',
-			'exc_tb': f'{str(exc_tb.tb_lineno)}'
+			'error': f'{"error: " + str(e), "line: " + str(exc_tb.tb_lineno)}',
 		})
+		
 		# return JsonResponse({'error': 'No data found for the selected station.'})
 
 
@@ -501,15 +496,13 @@ def get_scatterPlot(request):
 
 		return render(request, 'historical_validation_tool_peru/gizmo_ajax.html', context)
 
-
-
 	except Exception as e:
 		exc_type, exc_obj, exc_tb = sys.exc_info()
 		print("error: " + str(e))
 		print("line: " + str(exc_tb.tb_lineno))
 
 		return JsonResponse({
-			'error': f'{"error: " + str(e), ". line: " + str(exc_tb.tb_lineno)}',
+			'error': f'{"error: " + str(e), "line: " + str(exc_tb.tb_lineno)}',
 		})
 
 		# return JsonResponse({'error': 'No data found for the selected station.'})
@@ -580,15 +573,13 @@ def get_scatterPlotLogScale(request):
 
 		return render(request, 'historical_validation_tool_peru/gizmo_ajax.html', context)
 
-
-
 	except Exception as e:
 		exc_type, exc_obj, exc_tb = sys.exc_info()
 		print("error: " + str(e))
 		print("line: " + str(exc_tb.tb_lineno))
 
 		return JsonResponse({
-			'error': f'{"error: " + str(e), ". line: " + str(exc_tb.tb_lineno)}',
+			'error': f'{"error: " + str(e), "line: " + str(exc_tb.tb_lineno)}',
 		})
 
 		# return JsonResponse({'error': 'No data found for the selected station.'})
@@ -666,15 +657,13 @@ def get_volumeAnalysis(request):
 
 		return render(request, 'historical_validation_tool_peru/gizmo_ajax.html', context)
 
-
-
 	except Exception as e:
 		exc_type, exc_obj, exc_tb = sys.exc_info()
 		print("error: " + str(e))
 		print("line: " + str(exc_tb.tb_lineno))
 
 		return JsonResponse({
-			'error': f'{"error: " + str(e), ". line: " + str(exc_tb.tb_lineno)}',
+			'error': f'{"error: " + str(e), "line: " + str(exc_tb.tb_lineno)}',
 		})
 
 		# return JsonResponse({'error': 'No data found for the selected station.'})
@@ -718,15 +707,13 @@ def volume_table_ajax(request):
 
 		return JsonResponse(resp)
 
-
-
 	except Exception as e:
 		exc_type, exc_obj, exc_tb = sys.exc_info()
 		print("error: " + str(e))
 		print("line: " + str(exc_tb.tb_lineno))
 
 		return JsonResponse({
-			'error': f'{"error: " + str(e), ". line: " + str(exc_tb.tb_lineno)}',
+			'error': f'{"error: " + str(e), "line: " + str(exc_tb.tb_lineno)}',
 		})
 
 		# return JsonResponse({'error': 'No data found for the selected station.'})
@@ -865,15 +852,13 @@ def make_table_ajax(request):
 
 		return HttpResponse(table_final_html)
 
-
-
 	except Exception as e:
 		exc_type, exc_obj, exc_tb = sys.exc_info()
 		print("error: " + str(e))
 		print("line: " + str(exc_tb.tb_lineno))
 
 		return JsonResponse({
-			'error': f'{"error: " + str(e), ". line: " + str(exc_tb.tb_lineno)}',
+			'error': f'{"error: " + str(e), "line: " + str(exc_tb.tb_lineno)}',
 		})
 
 		# return JsonResponse({'error': 'No data found for the selected station.'})
@@ -1011,15 +996,13 @@ def get_time_series(request):
 
 		return render(request, 'historical_validation_tool_peru/gizmo_ajax.html', context)
 
-
-
 	except Exception as e:
 		exc_type, exc_obj, exc_tb = sys.exc_info()
 		print("error: " + str(e))
 		print("line: " + str(exc_tb.tb_lineno))
 
 		return JsonResponse({
-			'error': f'{"error: " + str(e), ". line: " + str(exc_tb.tb_lineno)}',
+			'error': f'{"error: " + str(e), "line: " + str(exc_tb.tb_lineno)}',
 		})
 
 		# return JsonResponse({'error': 'No data found for the selected station.'})
@@ -1245,7 +1228,7 @@ def get_time_series_bc(request):
 		print("line: " + str(exc_tb.tb_lineno))
 
 		return JsonResponse({
-			'error': f'{"error: " + str(e), ". line: " + str(exc_tb.tb_lineno)}',
+			'error': f'{"error: " + str(e), "line: " + str(exc_tb.tb_lineno)}',
 		})
 
 		# return JsonResponse({'error': 'No data found for the selected station.'})
@@ -1321,7 +1304,7 @@ def get_observed_discharge_csv(request):
 		print("line: " + str(exc_tb.tb_lineno))
 
 		return JsonResponse({
-			'error': f'{"error: " + str(e), ". line: " + str(exc_tb.tb_lineno)}',
+			'error': f'{"error: " + str(e), "line: " + str(exc_tb.tb_lineno)}',
 		})
 		
 		# return JsonResponse({'error': 'No data found for the selected station.'})
@@ -1353,19 +1336,16 @@ def get_simulated_discharge_csv(request):
 
 		return response
 
-
-
 	except Exception as e:
 		exc_type, exc_obj, exc_tb = sys.exc_info()
 		print("error: " + str(e))
 		print("line: " + str(exc_tb.tb_lineno))
 
 		return JsonResponse({
-			'error': f'{"error: " + str(e), ". line: " + str(exc_tb.tb_lineno)}',
+			'error': f'{"error: " + str(e), "line: " + str(exc_tb.tb_lineno)}',
 		})
 
 		# return JsonResponse({'error': 'No data found for the selected station.'})
-
 
 
 def get_simulated_bc_discharge_csv(request):
@@ -1391,15 +1371,13 @@ def get_simulated_bc_discharge_csv(request):
 
 		return response
 
-
-
 	except Exception as e:
 		exc_type, exc_obj, exc_tb = sys.exc_info()
 		print("error: " + str(e))
 		print("line: " + str(exc_tb.tb_lineno))
 
 		return JsonResponse({
-			'error': f'{"error: " + str(e), ". line: " + str(exc_tb.tb_lineno)}',
+			'error': f'{"error: " + str(e), "line: " + str(exc_tb.tb_lineno)}',
 		})
 
 		# return JsonResponse({'error': 'No data found for the selected station.'})
@@ -1429,15 +1407,13 @@ def get_forecast_data_csv(request):
 
 		return response
 
-
-
 	except Exception as e:
 		exc_type, exc_obj, exc_tb = sys.exc_info()
 		print("error: " + str(e))
 		print("line: " + str(exc_tb.tb_lineno))
 
 		return JsonResponse({
-			'error': f'{"error: " + str(e), ". line: " + str(exc_tb.tb_lineno)}',
+			'error': f'{"error: " + str(e), "line: " + str(exc_tb.tb_lineno)}',
 		})
 
 		# return JsonResponse({'error': 'No data found for the selected station.'})
@@ -1465,12 +1441,13 @@ def get_forecast_bc_data_csv(request):
 		fixed_stats.to_csv(encoding='utf-8', header=True, path_or_buf=response)
 
 		return response
+
 	except Exception as e:
 		exc_type, exc_obj, exc_tb = sys.exc_info()
 		print("error: " + str(e))
 		print("line: " + str(exc_tb.tb_lineno))
 
 		return JsonResponse({
-			'error': f'{"error: " + str(e), ". line: " + str(exc_tb.tb_lineno)}',
+			'error': f'{"error: " + str(e), "line: " + str(exc_tb.tb_lineno)}',
 		})
 		# return JsonResponse({'error': 'No data found for the selected station.'})
