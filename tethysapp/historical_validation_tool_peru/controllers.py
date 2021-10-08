@@ -139,6 +139,20 @@ def get_popup_response(request):
     """
     Get simulated data from api
     """
+    observed_data_path_file = os.path.join(app.get_app_workspace().path, 'observed_data.json')
+    simulated_data_path_file = os.path.join(app.get_app_workspace().path, 'simulated_data.json')
+    corrected_data_path_file = os.path.join(app.get_app_workspace().path, 'corrected_data.json')
+    forecast_data_path_file = os.path.join(app.get_app_workspace().path, 'forecast_data.json')
+
+    f = open(observed_data_path_file, 'w')
+    f.close()
+    f2 = open(simulated_data_path_file, 'w')
+    f2.close()
+    f3 = open(corrected_data_path_file, 'w')
+    f3.close()
+    f4 = open(forecast_data_path_file, 'w')
+    f4.close()
+
 
     start_time = time.time()
 
@@ -210,14 +224,23 @@ def get_popup_response(request):
             dataDischarge = map(float, dataDischarge)
 
         observed_df = pd.DataFrame(data=dataDischarge, index=datesDischarge, columns=['Observed Streamflow'])
-
+        print("before conversion")
+        print(observed_df)
         hs.setAccessRules(resource_id, public=False)
 
         print("finished get_popup_response")
 
         #print("--- %s seconds getpopup ---" % (time.time() - start_time))
         observed_data_file_path = os.path.join(app.get_app_workspace().path, 'observed_data.json')
-        observed_df.to_json(observed_data_file_path)
+        observed_df.reset_index(level=0, inplace=True)
+        observed_df['index'] = observed_df['index'].dt.strftime('%Y-%m-%d')
+        observed_df.set_index('index', inplace= True)
+        observed_df.to_json(observed_data_file_path,orient='columns')
+
+        # print("resetting index")
+        # print(observed_df)
+        # print("back index")
+        # print(observed_df)
 
         return JsonResponse({
             # "observed_df": observed_df.to_json()
@@ -281,6 +304,10 @@ def get_hydrographs(request):
         simulated_df = pd.DataFrame(data=simulated_df.iloc[:, 0].values, index=simulated_df.index, columns=['Simulated Streamflow'])
 
         simulated_data_file_path = os.path.join(app.get_app_workspace().path, 'simulated_data.json')
+        # simulated_df.reset_index(level=0, inplace=True)
+        # print(simulated_df)
+        # simulated_df['datetime'] = simulated_df['datetime'].dt.strftime('%Y-%m-%d')
+        # simulated_df.set_index('datetime', inplace= True)
         simulated_df.to_json(simulated_data_file_path)
 
 
@@ -288,6 +315,10 @@ def get_hydrographs(request):
 
         corrected_df = geoglows.bias.correct_historical(simulated_df, observed_df)
         corrected_data_file_path = os.path.join(app.get_app_workspace().path, 'corrected_data.json')
+        corrected_df.reset_index(level=0, inplace=True)
+        print(corrected_df)
+        corrected_df['index'] = corrected_df['index'].dt.strftime('%Y-%m-%d')
+        corrected_df.set_index('index', inplace= True)
         corrected_df.to_json(corrected_data_file_path)
 
         '''Plotting Data'''
@@ -355,7 +386,7 @@ def get_dailyAverages(request):
         simulated_df = pd.read_json(simulated_data_file_path,convert_dates=True)
 
         corrected_data_file_path = os.path.join(app.get_app_workspace().path, 'corrected_data.json')
-        corrected_df = pd.read_json(simulated_data_file_path,convert_dates=True)
+        corrected_df = pd.read_json(corrected_data_file_path,convert_dates=True)
 
         merged_df = hd.merge_data(sim_df=simulated_df, obs_df=observed_df)
 
@@ -433,7 +464,7 @@ def get_monthlyAverages(request):
         simulated_df = pd.read_json(simulated_data_file_path,convert_dates=True)
 
         corrected_data_file_path = os.path.join(app.get_app_workspace().path, 'corrected_data.json')
-        corrected_df = pd.read_json(simulated_data_file_path,convert_dates=True)
+        corrected_df = pd.read_json(corrected_data_file_path,convert_dates=True)
 
         merged_df = hd.merge_data(sim_df=simulated_df, obs_df=observed_df)
 
@@ -510,7 +541,7 @@ def get_scatterPlot(request):
         simulated_data_file_path = os.path.join(app.get_app_workspace().path, 'simulated_data.json')
         simulated_df = pd.read_json(simulated_data_file_path,convert_dates=True)
         corrected_data_file_path = os.path.join(app.get_app_workspace().path, 'corrected_data.json')
-        corrected_df = pd.read_json(simulated_data_file_path,convert_dates=True)
+        corrected_df = pd.read_json(corrected_data_file_path,convert_dates=True)
         merged_df = hd.merge_data(sim_df=simulated_df, obs_df=observed_df)
 
         merged_df2 = hd.merge_data(sim_df=corrected_df, obs_df=observed_df)
@@ -625,7 +656,7 @@ def get_scatterPlotLogScale(request):
         simulated_data_file_path = os.path.join(app.get_app_workspace().path, 'simulated_data.json')
         simulated_df = pd.read_json(simulated_data_file_path,convert_dates=True)
         corrected_data_file_path = os.path.join(app.get_app_workspace().path, 'corrected_data.json')
-        corrected_df = pd.read_json(simulated_data_file_path,convert_dates=True)
+        corrected_df = pd.read_json(corrected_data_file_path,convert_dates=True)
         merged_df = hd.merge_data(sim_df=simulated_df, obs_df=observed_df)
 
         merged_df2 = hd.merge_data(sim_df=corrected_df, obs_df=observed_df)
@@ -715,7 +746,7 @@ def get_volumeAnalysis(request):
         simulated_data_file_path = os.path.join(app.get_app_workspace().path, 'simulated_data.json')
         simulated_df = pd.read_json(simulated_data_file_path,convert_dates=True)
         corrected_data_file_path = os.path.join(app.get_app_workspace().path, 'corrected_data.json')
-        corrected_df = pd.read_json(simulated_data_file_path,convert_dates=True)
+        corrected_df = pd.read_json(corrected_data_file_path,convert_dates=True)
         merged_df = hd.merge_data(sim_df=simulated_df, obs_df=observed_df)
 
         merged_df2 = hd.merge_data(sim_df=corrected_df, obs_df=observed_df)
@@ -800,7 +831,7 @@ def volume_table_ajax(request):
         simulated_data_file_path = os.path.join(app.get_app_workspace().path, 'simulated_data.json')
         simulated_df = pd.read_json(simulated_data_file_path,convert_dates=True)
         corrected_data_file_path = os.path.join(app.get_app_workspace().path, 'corrected_data.json')
-        corrected_df = pd.read_json(simulated_data_file_path,convert_dates=True)
+        corrected_df = pd.read_json(corrected_data_file_path,convert_dates=True)
         merged_df = hd.merge_data(sim_df=simulated_df, obs_df=observed_df)
 
         merged_df2 = hd.merge_data(sim_df=corrected_df, obs_df=observed_df)
@@ -851,7 +882,7 @@ def make_table_ajax(request):
         simulated_data_file_path = os.path.join(app.get_app_workspace().path, 'simulated_data.json')
         simulated_df = pd.read_json(simulated_data_file_path,convert_dates=True)
         corrected_data_file_path = os.path.join(app.get_app_workspace().path, 'corrected_data.json')
-        corrected_df = pd.read_json(simulated_data_file_path,convert_dates=True)
+        corrected_df = pd.read_json(corrected_data_file_path,convert_dates=True)
         # Indexing the metrics to get the abbreviations
         selected_metric_abbr = get_data.getlist("metrics[]", None)
 
@@ -1176,7 +1207,7 @@ def get_time_series_bc(request):
         simulated_df = pd.read_json(simulated_data_file_path,convert_dates=True)
 
         corrected_data_file_path = os.path.join(app.get_app_workspace().path, 'corrected_data.json')
-        corrected_df = pd.read_json(simulated_data_file_path,convert_dates=True)
+        corrected_df = pd.read_json(corrected_data_file_path,convert_dates=True)
 
         forecast_data_file_path = os.path.join(app.get_app_workspace().path, 'forecast_data.json')
         forecast_df = pd.read_json(forecast_data_file_path,convert_dates=True)
@@ -1548,7 +1579,7 @@ def get_simulated_bc_discharge_csv(request):
         observed_data_file_path = os.path.join(app.get_app_workspace().path, 'observed_data.json')
         observed_df = pd.read_json(observed_data_file_path,convert_dates=True)
         corrected_data_file_path = os.path.join(app.get_app_workspace().path, 'corrected_data.json')
-        corrected_df = pd.read_json(simulated_data_file_path,convert_dates=True)
+        corrected_df = pd.read_json(corrected_data_file_path,convert_dates=True)
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename=corrected_simulated_discharge_{0}.csv'.format(idEstacion)
 
