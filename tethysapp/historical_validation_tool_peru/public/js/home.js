@@ -301,7 +301,6 @@ function get_dailyAverages (watershed, subbasin, streamcomid, stationid, station
         success: function (data) {
             if (!data.error) {
                 console.log("get_dailyAverages in");
-
                 $('#dailyAverages-loading').addClass('hidden');
                 $('#dates').removeClass('hidden');
 //                $('#obsdates').removeClass('hidden');
@@ -1163,6 +1162,13 @@ function get_time_series(watershed, subbasin, streamcomid, stationid, stationcod
 
                 $('#download_forecast').removeClass('hidden');
 
+                $('#submit-download-forecast-ensemble').attr({
+                    target: '_blank',
+                    href: 'get-forecast-ensemble-data-csv?' + jQuery.param(params)
+                });
+
+                $('#download_forecast_ensemble').removeClass('hidden');
+
                 get_time_series_bc(watershed, subbasin, streamcomid, stationid, stationcode, stationname, startdate);
 
             } else if (data.error) {
@@ -1242,6 +1248,14 @@ function get_time_series_bc(watershed, subbasin, streamcomid, stationid, station
                 });
 
                 $('#download_forecast_bc').removeClass('hidden');
+
+
+                $('#submit-download-forecast-bc-ensemble').attr({
+                    target: '_blank',
+                    href: 'get-forecast-ensemble-bc-data-csv?' + jQuery.param(params)
+                });
+
+                $('#download_forecast_ensemble_bc').removeClass('hidden');
 
             } else if (data.error) {
               $('#forecast-bc-loading').addClass('hidden');
