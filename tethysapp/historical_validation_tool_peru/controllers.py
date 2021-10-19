@@ -105,6 +105,8 @@ def get_popup_response(request):
     """
     Get simulated data from api
     """
+    start_time = time.time()
+
     observed_data_path_file = os.path.join(app.get_app_workspace().path, 'observed_data.json')
     simulated_data_path_file = os.path.join(app.get_app_workspace().path, 'simulated_data.json')
     corrected_data_path_file = os.path.join(app.get_app_workspace().path, 'corrected_data.json')
@@ -118,8 +120,6 @@ def get_popup_response(request):
     f3.close()
     f4 = open(forecast_data_path_file, 'w')
     f4.close()
-
-    start_time = time.time()
 
     return_obj = {}
 
@@ -177,8 +177,7 @@ def get_popup_response(request):
         simulated_df.index = pd.to_datetime(simulated_df.index)
         simulated_df.index = simulated_df.index.to_series().dt.strftime("%Y-%m-%d")
         simulated_df.index = pd.to_datetime(simulated_df.index)
-        simulated_df = pd.DataFrame(data=simulated_df.iloc[:, 0].values, index=simulated_df.index,
-                                    columns=['Simulated Streamflow'])
+        simulated_df = pd.DataFrame(data=simulated_df.iloc[:, 0].values, index=simulated_df.index, columns=['Simulated Streamflow'])
 
         simulated_data_file_path = os.path.join(app.get_app_workspace().path, 'simulated_data.json')
         simulated_df.reset_index(level=0, inplace=True)
@@ -207,7 +206,6 @@ def get_hydrographs(request):
     Get observed data from csv files in Hydroshare
     Get historic simulations from ERA Interim
     """
-    print("hydrographs")
 
     start_time = time.time()
 
@@ -567,11 +565,11 @@ def get_scatterPlotLogScale(request):
     Get observed data from csv files in Hydroshare
     Get historic simulations from ERA Interim
     """
-    get_data = request.GET
 
     start_time = time.time()
 
     try:
+        get_data = request.GET
         #get station attributes
         idEstacion = get_data['stationid']
         codEstacion = get_data['stationcode']
@@ -664,11 +662,11 @@ def get_volumeAnalysis(request):
     Get observed data from csv files in Hydroshare
     Get historic simulations from ERA Interim
     """
-    get_data = request.GET
 
     start_time = time.time()
 
     try:
+        get_data = request.GET
         #get station attributes
         idEstacion = get_data['stationid']
         codEstacion = get_data['stationcode']
@@ -763,13 +761,20 @@ def get_volumeAnalysis(request):
         })
 
 def volume_table_ajax(request):
-    """Calculates the volumes of the simulated and observed streamflow"""
-
-    get_data = request.GET
+    """Calculates the volumes of the simulated
+    and observed streamflow"""
 
     start_time = time.time()
 
     try:
+        get_data = request.GET
+        idEstacion = get_data['stationid']
+        codEstacion = get_data['stationcode']
+        nomEstacion = get_data['stationname']
+        nomEstacion = nomEstacion.replace(' ', '_')
+        nomEstacion = nomEstacion.replace('+', '')
+        nomEstacion = nomEstacion.replace('(', '')
+        nomEstacion = nomEstacion.replace(')', '')
 
         '''Get Observed Data'''
         observed_data_file_path = os.path.join(app.get_app_workspace().path, 'observed_data.json')
@@ -828,11 +833,17 @@ def volume_table_ajax(request):
 
 def make_table_ajax(request):
 
-    get_data = request.GET
-
     start_time = time.time()
 
     try:
+        get_data = request.GET
+        idEstacion = get_data['stationid']
+        codEstacion = get_data['stationcode']
+        nomEstacion = get_data['stationname']
+        nomEstacion = nomEstacion.replace(' ', '_')
+        nomEstacion = nomEstacion.replace('+', '')
+        nomEstacion = nomEstacion.replace('(', '')
+        nomEstacion = nomEstacion.replace(')', '')
 
         # Indexing the metrics to get the abbreviations
         selected_metric_abbr = get_data.getlist("metrics[]", None)
@@ -1125,7 +1136,6 @@ def get_time_series(request):
 
         return render(request, 'historical_validation_tool_peru/gizmo_ajax.html', context)
 
-
     except Exception as e:
         exc_type, exc_obj, exc_tb = sys.exc_info()
         print("error: " + str(e))
@@ -1139,11 +1149,10 @@ def get_time_series(request):
 
 def get_time_series_bc(request):
 
-    get_data = request.GET
-
     start_time = time.time()
 
     try:
+        get_data = request.GET
         #get station attributes
         comid = get_data['streamcomid']
         idEstacion = get_data['stationid']
@@ -1379,8 +1388,6 @@ def get_time_series_bc(request):
 
         return render(request, 'historical_validation_tool_peru/gizmo_ajax.html', context)
 
-
-
     except Exception as e:
         exc_type, exc_obj, exc_tb = sys.exc_info()
         print("error: " + str(e))
@@ -1394,7 +1401,6 @@ def get_time_series_bc(request):
 def get_available_dates(request):
 
     get_data = request.GET
-
     watershed = get_data['watershed']
     subbasin = get_data['subbasin']
     comid = get_data['streamcomid']
@@ -1430,13 +1436,16 @@ def get_observed_discharge_csv(request):
 	Get observed data from csv files in Hydroshare
 	"""
 
-	get_data = request.GET
-	global observed_df
-	global idEstacion
-	global codEstacion
-	global nomEstacion
-
 	try:
+	    get_data = request.GET
+	    comid = get_data['streamcomid']
+        idEstacion = get_data['stationid']
+        codEstacion = get_data['stationcode']
+        nomEstacion = get_data['stationname']
+        nomEstacion = nomEstacion.replace(' ', '_')
+        nomEstacion = nomEstacion.replace('+', '')
+        nomEstacion = nomEstacion.replace('(', '')
+        nomEstacion = nomEstacion.replace(')', '')
 	    
         observed_data_file_path = os.path.join(app.get_app_workspace().path, 'observed_data.json')
         observed_df = pd.read_json(observed_data_file_path, convert_dates=True)
@@ -1474,9 +1483,9 @@ def get_simulated_discharge_csv(request):
     """
     Get historic simulations from ERA Interim
     """
-    get_data = request.GET
 
     try:
+        get_data = request.GET
         #get station attributes
         comid = get_data['streamcomid']
         idEstacion = get_data['stationid']
@@ -1562,9 +1571,8 @@ def get_forecast_data_csv(request):
     Returns Forecast data as csv
     """""
 
-    get_data = request.GET
-
     try:
+        get_data = request.GET
         #get station attributes
         watershed = get_data['watershed']
         subbasin = get_data['subbasin']
