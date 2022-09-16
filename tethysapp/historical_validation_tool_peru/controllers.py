@@ -47,12 +47,12 @@ def home(request):
     geoserver_workspace = app.get_custom_setting('workspace')
     region = app.get_custom_setting('region')
     geoserver_endpoint = TextInput(display_text='',
-                                                               initial=json.dumps([geoserver_base_url, geoserver_workspace, region]),
-                                                               name='geoserver_endpoint',
-                                                               disabled=True)
+                                   initial=json.dumps([geoserver_base_url, geoserver_workspace, region]),
+                                   name='geoserver_endpoint',
+                                   disabled=True)
 
     # Available Forecast Dates
-    res = requests.get('https://geoglows.ecmwf.int/api/AvailableDates/?region=central_america-geoglows', verify=False)
+    res = requests.get('https://geoglows.ecmwf.int/api/AvailableDates/?region=south_america-geoglows', verify=False)
     data = res.json()
     dates_array = (data.get('available_dates'))
 
@@ -73,14 +73,14 @@ def home(request):
 
     # Date Picker Options
     date_picker = DatePicker(name='datesSelect',
-                                                     display_text='Date',
-                                                     autoclose=True,
-                                                     format='yyyy-mm-dd',
-                                                     start_date=dates[-1][0],
-                                                     end_date=dates[1][0],
-                                                     start_view='month',
-                                                     today_button=True,
-                                                     initial='')
+                             display_text='Date',
+                             autoclose=True,
+                             format='yyyy-mm-dd',
+                             start_date=dates[-1][0],
+                             end_date=dates[1][0],
+                             start_view='month',
+                             today_button=True,
+                             initial='')
 
     region_index = json.load(open(os.path.join(os.path.dirname(__file__), 'public', 'geojson', 'index.json')))
     regions = SelectInput(
@@ -92,10 +92,10 @@ def home(request):
     )
 
     context = {
-            "metric_loop_list": metric_loop_list,
-            "geoserver_endpoint": geoserver_endpoint,
-            "date_picker": date_picker,
-            "regions": regions
+	    "metric_loop_list": metric_loop_list,
+        "geoserver_endpoint": geoserver_endpoint,
+        "date_picker": date_picker,
+        "regions": regions
     }
 
     return render(request, 'historical_validation_tool_peru/home.html', context)
@@ -144,7 +144,7 @@ def get_popup_response(request):
         hs.setAccessRules(resource_id, public=True)
 
         url = 'https://www.hydroshare.org/resource/{0}/data/contents/Discharge_Data/{1}.csv'.format(resource_id, idEstacion)
-
+        print(url)
         s = requests.get(url, verify=False).content
         df = pd.read_csv(io.StringIO(s.decode('utf-8')), index_col=0)
         df.index = pd.to_datetime(df.index)
@@ -159,8 +159,6 @@ def get_popup_response(request):
         observed_df = pd.DataFrame(data=dataDischarge, index=datesDischarge, columns=['Observed Streamflow'])
 
         hs.setAccessRules(resource_id, public=False)
-
-        print("finished get_popup_response")
 
         observed_data_file_path = os.path.join(app.get_app_workspace().path, 'observed_data.json')
         observed_df.reset_index(level=0, inplace=True)
@@ -186,6 +184,8 @@ def get_popup_response(request):
         simulated_df.index = pd.to_datetime(simulated_df.index)
         simulated_df.index.name = 'Datetime'
         simulated_df.to_json(simulated_data_file_path)
+
+        print("finished get_popup_response")
 
         print("--- %s seconds getpopup ---" % (time.time() - start_time))
 

@@ -84,7 +84,8 @@ function init_map() {
 
 	var streams = new ol.layer.Image({
 		source: new ol.source.ImageWMS({
-			url: 'https://geoserver.hydroshare.org/geoserver/HS-9b6a7f2197ec403895bacebdca4d0074/wms',
+			url: 'http://senamhi.westus2.cloudapp.azure.com:8181/geoserver/peru_hydroviewer/wms',
+			//url: 'https://geoserver.hydroshare.org/geoserver/HS-9b6a7f2197ec403895bacebdca4d0074/wms',
 			params: { 'LAYERS': 'south_america-peru-geoglows-drainage_line' },
 			serverType: 'geoserver',
 			crossOrigin: 'Anonymous'
@@ -96,7 +97,8 @@ function init_map() {
 
 	var stations = new ol.layer.Image({
 		source: new ol.source.ImageWMS({
-			url: 'https://geoserver.hydroshare.org/geoserver/HS-9b6a7f2197ec403895bacebdca4d0074/wms',
+			url: 'http://senamhi.westus2.cloudapp.azure.com:8181/geoserver/peru_hydroviewer/wms',
+			//url: 'https://geoserver.hydroshare.org/geoserver/HS-9b6a7f2197ec403895bacebdca4d0074/wms',
 			params: { 'LAYERS': 'SENAMHI-ANA_Stations_v2' },
 			serverType: 'geoserver',
 			crossOrigin: 'Anonymous'
@@ -118,7 +120,8 @@ function init_map() {
 
 }
 
-let ajax_url = 'https://geoserver.hydroshare.org/geoserver/wfs?request=GetCapabilities';
+//let ajax_url = 'https://geoserver.hydroshare.org/geoserver/wfs?request=GetCapabilities';
+let ajax_url = 'http://senamhi.westus2.cloudapp.azure.com:8181/geoserver/wfs?request=GetCapabilities';
 
 let capabilities = $.ajax(ajax_url, {
 	type: 'GET',
@@ -131,7 +134,8 @@ let capabilities = $.ajax(ajax_url, {
 	success: function() {
 		let x = capabilities.responseText
 		.split('<FeatureTypeList>')[1]
-		.split('HS-9b6a7f2197ec403895bacebdca4d0074:south_america-peru-geoglows-drainage_line')[1]
+		//.split('HS-9b6a7f2197ec403895bacebdca4d0074:south_america-peru-geoglows-drainage_line')[1]
+		.split('peru_hydroviewer:south_america-peru-geoglows-drainage_line')[1]
 		.split('LatLongBoundingBox ')[1]
 		.split('/></FeatureType>')[0];
 
