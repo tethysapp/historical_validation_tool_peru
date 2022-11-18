@@ -8,7 +8,7 @@ class HistoricalValidationToolPeru(TethysAppBase):
 
     name = 'Historical Validation Tool Peru'
     index = 'historical_validation_tool_peru:home'
-    icon = 'historical_validation_tool_peru/images/historic_validation_peru_logo.png'
+    icon = 'historical_validation_tool_peru/images/historical_validation_peru_logo.jpeg'
     package = 'historical_validation_tool_peru'
     root_url = 'historical-validation-tool-peru'
     color = '#2980b9'
@@ -135,6 +135,15 @@ class HistoricalValidationToolPeru(TethysAppBase):
                 url='get-forecast-ensemble-bc-data-csv',
                 controller='historical_validation_tool_peru.controllers.get_forecast_ensemble_bc_data_csv'
             ),
+            ########################################################
+            ########################################################
+            UrlMap(
+                name='get_zoom_array',
+                url='get-zoom-array',
+                controller='historical_validation_tool_peru.controllers.get_zoom_array',
+            ),
+            ########################################################
+            ########################################################
         )
 
         return url_maps

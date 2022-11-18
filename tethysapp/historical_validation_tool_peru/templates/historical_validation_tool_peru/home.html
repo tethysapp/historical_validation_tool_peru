@@ -22,10 +22,53 @@
         </svg>
         Stations <input id="stp-stations-toggle" class="toggle-layer" type="checkbox" checked data-toggle="toggle" data-size="mini">
       </div>
+
       <div>
         <br>
         {% gizmo select_input regions %}
       </div>
+
+      <div>
+        {% gizmo select_input2 provinces %}
+      </div>
+
+      <div>
+        {% gizmo select_input2 basins %}
+      </div>
+
+      {# Search SubBasins #}
+      <div>
+        {% gizmo select_input2 subbasins %}
+      </div>
+
+      <div>
+        {# Search window #}
+        <div>
+          <form>
+            <label>Search: </label>
+            <input id="search-txt" type="text" class="form-control" placeholder="ejemplo" onkeyup="remove_names_for_list()">
+          </form>
+        </div>
+
+        {# Search list #}
+        <div id="list-search-container" class="" style="color: black;" >
+          <select id="list-search" style="width: 100%" multiple="multiple" onchange="list_search_func(value)">
+            {% for name_search in search_list %}
+              <option value="{{ name_search }}">{{ name_search }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        {# Search button #}
+        <button id="search-btn" style="width: 100%;" ><span class="glyphicon glyphicon-search"></span></button>
+
+        {# Alert paragraph #}
+        <div id="search-alert" class="hidden">
+          <p></p>
+        </div>
+
+      </div>
+
     </div>
   </div>
   <img id="featureLoader" style="display: none; position:fixed; z-index: 100; left : 0; bottom : 0; right : 0; top : 0; margin:auto;" src="{% static 'historical_validation_tool_peru/images/loader2.gif' %}">
@@ -59,7 +102,6 @@
             <div class="col-md-4">
               <div align="right">
                 <img class="obslogos" src="{% static 'historical_validation_tool_peru/images/byu_logo.png' %}">
-                <img class="obslogos" src="{% static 'historical_validation_tool_peru/images/ana.jpg' %}">
                 <img class="obslogos" src="{% static 'historical_validation_tool_peru/images/senamhi.png' %}">
                 <img class="obslogos" src="{% static 'historical_validation_tool_peru/images/Servir_logo.jpeg' %}">
               </div>
@@ -269,7 +311,7 @@
           <p>Additionally, this bias-correction is extended to the GEOGloWS ECMWF Streamflow Prediction Tool short term forecast</p>
           <p>Users can click on any station in the map to retrieve observed and simulated data.</p>
           <ol>
-            <li> The first tab displays a plot of the historical observed data, the GEOGloWS ECMWF Streamflow Prediction Tool historic simulation and bias-correction simulation data for 40 years from 1979 to 2018, and the bias corrected simulated hydrograph for 35 years from 1980 to 2015.</li>
+            <li> The first tab displays a plot of the historical observed data, the GEOGloWS ECMWF Streamflow Prediction Tool historic simulation and bias-correction simulation data for 40 years from 1979 to present, and the bias corrected simulated hydrograph for 35 years from 1980 to 2015.</li>
             <li> The second tab displays the Visual Analysis included in Hydrostats. It includes plots for the daily average streamflow, the monthly average streamflow, the scatter plot, the scatter plot in the log scale, the volume analysis for the corrected simulated, simulated, and observed volume.</li>
             <li> The third tab includes a table report with some predefined list of metrics. It also allows you select a set of metrics that you want to use in order to validate the historical simulation of the Streamflow Prediction Tool.</li>
             <li> The fourth tab displays a plot with the GEOGloWS ECMWF Streamflow Prediction Tool forecast data and the bias corrected forecast data.</li>
